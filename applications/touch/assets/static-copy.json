@@ -1,0 +1,27 @@
+{
+	"ATTRACT-CTA": "Create Your Own Art",
+	"TITLE": "A Path to Hope",
+	"START": "START",
+	"ATTRACT-LEGAL": "© Kite Pharma, Inc. All rights reserved. US-UNBP-1456 12/2022",
+
+	"EXPERIMENT-CTA-1": "Try using your own voice. Say anything to activate...",
+	"EXPERIMENT-CTA-2": "Keep talking to complete the circle. Say anything to get started...",
+	"EXPERIMENT-TOOLTIP": "The volume of your voice controls the paint",
+	"EXPERIMENT-ENCOURAGEMENT": "That's great.\nKeep going.",
+	"EXPERIMENT-SUCCESS": "Now, let's create\nyour artwork.",
+	"EXPERIMENT-EXIT": "Exit",
+	"EXPERIMENT-NEXT": "Next",
+	"EXPERIMENT-FINISH": "Finish",
+
+	"ENJOY-MESSAGE": "Your artwork\nis complete.",
+	"ENJOY-GALLERY": "Add to gallery",
+
+	"REFLECT-MESSAGE": "Thank you for sharing",
+	"REFLECT-NAV": "Discover more",
+	"REFLECT-RESTART": "Start over",
+
+	"AFFIRMATION": "Great job",
+
+	"RECORDING-COPY": "Audio will not be recorded or stored"
+
+}

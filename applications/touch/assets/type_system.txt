@@ -1,0 +1,14 @@
+name	font	size	letter_spacing	line_height		
+headlineBold		32	1	1.0		
+headlineLight		18	1	1.0		
+headlineAlt		20	0.3	1.0		
+labelLight		13	1.2	1.0		
+dataBoldBig		16	0.0	1.0		
+dataBold		14	1.5	1.0		
+dataBoldMed		12	0.0	1.0		
+dataBoldSmall		10	0.0	1.0		
+dataRegular		12	0.5	1.0		
+dataRegularAlt		16	0.5	1.0		
+dataLight		14	1.0	1.0		
+dataLightSmall		13	0.5	1.0	
+attractTitleProject		60	0.0	1.0
