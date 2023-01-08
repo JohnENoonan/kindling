@@ -1,0 +1,283 @@
+Total number of trees: 683788
+
+Given a tree with the following features
+
+type SubTree struct {
+	TreeDbh   string `json:"tree_dbh"         csv:"tree_dbh"        `
+	StumpDiam string `json:"stump_diam"       csv:"stump_diam"      `
+	CurbLoc   string `json:"curb_loc"         csv:"curb_loc"        `
+	Status    string `json:"status"           csv:"status"          `
+	Health    string `json:"health"           csv:"health"          `
+	SpcCommon string `json:"spc_common"       csv:"spc_common"      `
+	Steward   string `json:"steward"          csv:"steward"         `
+	Guards    string `json:"guards"           csv:"guards"          `
+	Sidewalk  string `json:"sidewalk"         csv:"sidewalk"        `
+	Problems  string `json:"problems"         csv:"problems"        `
+	RootStone string `json:"root_stone"       csv:"root_stone"      `
+	RootGrate string `json:"root_grate"       csv:"root_grate"      `
+	RootOther string `json:"root_other"       csv:"root_other"      `
+	TrunkWire string `json:"trunk_wire"       csv:"trunk_wire"      `
+	TrnkLight string `json:"trnk_light"       csv:"trnk_light"      `
+	TrnkOther string `json:"trnk_other"       csv:"trnk_other"      `
+	BrchLight string `json:"brch_light"       csv:"brch_light"      `
+	BrchShoe  string `json:"brch_shoe"        csv:"brch_shoe"       `
+	BrchOther string `json:"brch_other"       csv:"brch_other"      `
+	NtaName   string `json:"nta_name"         csv:"nta_name"        `
+}
+
+Unique: 396192 (meaning that the object is distinct in all category)
+
+Instances: 241
+{TreeDbh:"6", StumpDiam:"0", CurbLoc:"OnCurb", Status:"Alive", Health:"Good", SpcCommon:"Callery pear", Steward:"None", Guards:"None", Sidewalk:"NoDamage", Problems:"None", RootStone:"No", RootGrate:"No", RootOther:"No", TrunkWire:"No", TrnkLight:"No", TrnkOther:"No", BrchLight:"No", BrchShoe:"No", BrchOther:"No", NtaName:"Annadale-Huguenot-Prince's Bay-Eltingville"}
+
+
+No neighbrohood name data
+
+type SubTree struct {
+	TreeDbh   string `json:"tree_dbh"         csv:"tree_dbh"        `
+	StumpDiam string `json:"stump_diam"       csv:"stump_diam"      `
+	CurbLoc   string `json:"curb_loc"         csv:"curb_loc"        `
+	Status    string `json:"status"           csv:"status"          `
+	Health    string `json:"health"           csv:"health"          `
+	SpcCommon string `json:"spc_common"       csv:"spc_common"      `
+	Steward   string `json:"steward"          csv:"steward"         `
+	Guards    string `json:"guards"           csv:"guards"          `
+	Sidewalk  string `json:"sidewalk"         csv:"sidewalk"        `
+	Problems  string `json:"problems"         csv:"problems"        `
+	RootStone string `json:"root_stone"       csv:"root_stone"      `
+	RootGrate string `json:"root_grate"       csv:"root_grate"      `
+	RootOther string `json:"root_other"       csv:"root_other"      `
+	TrunkWire string `json:"trunk_wire"       csv:"trunk_wire"      `
+	TrnkLight string `json:"trnk_light"       csv:"trnk_light"      `
+	TrnkOther string `json:"trnk_other"       csv:"trnk_other"      `
+	BrchLight string `json:"brch_light"       csv:"brch_light"      `
+	BrchShoe  string `json:"brch_shoe"        csv:"brch_shoe"       `
+	BrchOther string `json:"brch_other"       csv:"brch_other"      `
+}
+
+Unique: 110618
+
+Instances: 3368
+{TreeDbh:"2", StumpDiam:"0", CurbLoc:"OnCurb", Status:"Dead", Health:"", SpcCommon:"", Steward:"", Guards:"", Sidewalk:"", Problems:"", RootStone:"No", RootGrate:"No", RootOther:"No", TrunkWire:"No", TrnkLight:"No", TrnkOther:"No", BrchLight:"No", BrchShoe:"No", BrchOther:"No"}
+
+
+Excluding dead trees and neighbrohood name
+
+Unique: 110387
+
+Instances: 2521
+{TreeDbh:"4", StumpDiam:"0", CurbLoc:"OnCurb", Status:"Alive", Health:"Good", SpcCommon:"cherry", Steward:"None", Guards:"None", Sidewalk:"NoDamage", Problems:"None", RootStone:"No", RootGrate:"No", RootOther:"No", TrunkWire:"No", TrnkLight:"No", TrnkOther:"No", BrchLight:"No", BrchShoe:"No", BrchOther:"No"}
+
+
+Diameters of trees:
+inches : instances
+0 : 17932
+1 : 2899
+2 : 41977
+3 : 54454
+4 : 60372
+5 : 41642
+6 : 36519
+7 : 30862
+8 : 30828
+9 : 28903
+10 : 29672
+11 : 37978
+12 : 25853
+13 : 24441
+14 : 21827
+15 : 19643
+16 : 17813
+17 : 15698
+18 : 19276
+19 : 12655
+20 : 11428
+21 : 10645
+22 : 10259
+23 : 9155
+24 : 8531
+25 : 10235
+26 : 6522
+27 : 6414
+28 : 5698
+29 : 5225
+30 : 4292
+31 : 3939
+32 : 4796
+33 : 2854
+34 : 2293
+35 : 2043
+36 : 1525
+37 : 1334
+38 : 1336
+39 : 910
+40 : 615
+41 : 617
+42 : 296
+43 : 297
+44 : 191
+45 : 242
+46 : 190
+47 : 91
+48 : 118
+49 : 47
+50 : 42
+51 : 54
+52 : 26
+53 : 20
+54 : 29
+55 : 12
+56 : 16
+57 : 21
+58 : 12
+59 : 16
+60 : 5
+61 : 5
+62 : 5
+63 : 5
+64 : 17
+65 : 1
+66 : 2
+67 : 2
+68 : 2
+70 : 4
+71 : 5
+72 : 3
+73 : 2
+74 : 4
+75 : 1
+76 : 2
+77 : 1
+78 : 1
+79 : 2
+80 : 3
+81 : 1
+87 : 1
+88 : 3
+89 : 4
+91 : 1
+94 : 2
+98 : 1
+99 : 2
+100 : 1
+102 : 1
+104 : 1
+105 : 1
+106 : 2
+109 : 2
+110 : 2
+118 : 1
+120 : 2
+122 : 1
+123 : 2
+127 : 2
+128 : 1
+131 : 1
+132 : 2
+139 : 1
+140 : 1
+141 : 2
+142 : 1
+143 : 1
+145 : 1
+147 : 1
+149 : 2
+151 : 1
+154 : 1
+159 : 1
+164 : 1
+165 : 1
+168 : 1
+169 : 1
+170 : 1
+172 : 2
+175 : 1
+177 : 1
+181 : 1
+183 : 1
+195 : 1
+198 : 1
+199 : 1
+204 : 3
+210 : 1
+217 : 1
+228 : 1
+234 : 1
+248 : 1
+250 : 1
+255 : 1
+261 : 1
+266 : 1
+281 : 1
+282 : 1
+291 : 1
+293 : 1
+298 : 1
+318 : 2
+389 : 1
+425 : 1
+450 : 1
+
+Curb Locations:
+
+OffsetFromCurb:26892
+OnCurb:656896
+
+Status:
+
+Alive:652173
+Dead:13961
+Stump:17654
+
+Health:
+
+(null):31616
+Fair:96504
+Good:528850
+Poor:26818
+
+Common Species Name:
+
+Unique Names: 133
+
+
+Stewards Options:
+
+(null):31615
+1or2:143557
+3or4:19183
+4orMore:1610
+None:487823
+
+Gaurd Options:
+
+(null):31616
+Harmful:20252
+Helpful:51866
+None:572306
+Unsure:7748
+
+Sidewalk Options:
+
+(null):31616
+Damage:187194
+NoDamage:464978
+
+
+Problems Options:
+
+This will require further parsing because it is a combination of other categories and unique problems.
+
+
+Known Problems Break Down:
+
+BrchLight:62365
+BrchOther:24355
+BrchShoe:411
+RootGrate:3536
+RootOther:30322
+RootStone:139999
+TrnkLight:1031
+TrnkOther:32573
+TrunkWire:13274
+
