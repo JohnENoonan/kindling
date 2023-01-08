@@ -5,6 +5,7 @@
 **/logs/**/*
 **/renders/**/*
 analytics/*
+sketches
 
 **/.cache/**/*
 **/__pycache__**
