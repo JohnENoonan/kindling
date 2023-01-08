@@ -9,21 +9,15 @@ class ext:
 	def __init__( self, ownerComp ):
 	
 		self.Scenes = {
-			'app': ['ATTRACT', 'INTERACTIVE', 'REFLECT']
+			'app': ['ATTRACT', 'MAP', 'MATCHING']
 		}
 
-		self.scene_ops_list = [
-
-			'/app/scene_app/ATTRACT',
-			'/app/scene_app/INTERACTIVE',
-			'/app/scene_app/REFLECT'
-
-		]
+		self.scene_ops_list = [ '/app/scene_app/' + scene for scene in self.Scenes["app"] ]
 
 		self.Subscenes = {
 
 			'app': {
-				'INTERACTIVE': [ 'EXPERIMENT', 'CONTRIBUTE', 'ENJOY' ]
+				'MAP': [ 'AREA', 'CONNECTED' ]
 			}
 		}
 		
@@ -39,17 +33,16 @@ class ext:
 			'app': {
 				'scenes': {
 					'ATTRACT': self.nodes['app']['scenes'].par.value0,
-					'INTERACTIVE': self.nodes['app']['scenes'].par.value1,
-					'REFLECT': self.nodes['app']['scenes'].par.value2
+					'MAP': self.nodes['app']['scenes'].par.value1,
+					'MATCHING': self.nodes['app']['scenes'].par.value2
 				},
 				'subscenes': {
-					'INTERACTIVE': {
-						'EXPERIMENT': self.nodes['app']['subscenes'].par.value0,
-						'CONTRIBUTE': self.nodes['app']['subscenes'].par.value1,
-						'ENJOY': self.nodes['app']['subscenes'].par.value2
+					'MAP': {
+						'AREA': self.nodes['app']['subscenes'].par.value0,
+						'CONNECTED': self.nodes['app']['subscenes'].par.value1
 					}
 				}
-			}			
+			}
 		}
 
 		return
