@@ -53,7 +53,11 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 			},
 		})
 
-		request = httptest.NewRequest("GET", "http://example.com/all-trees?latitude=40.72309177&longitude=-73.84421522&radius=0.5", nil)
+		request = httptest.NewRequest(
+			"GET",
+			"http://example.com/all-trees?latitude=40.72309177&longitude=-73.84421522&radius=0.5",
+			nil,
+		)
 		response = httptest.NewRecorder()
 	})
 
@@ -108,7 +112,11 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 		context("when the query parameters cannot be parsed", func() {
 			context("the latitude cannot be parsed", func() {
 				it.Before(func() {
-					request = httptest.NewRequest("GET", "http://example.com/all-trees?latitude=fail&longitude=-73.84421522&radius=0.5", nil)
+					request = httptest.NewRequest(
+						"GET",
+						"http://example.com/all-trees?latitude=fail&longitude=-73.84421522&radius=0.5",
+						nil,
+					)
 				})
 
 				it("retuns a 400 error and an error message", func() {
@@ -124,7 +132,11 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 
 			context("the longitude cannot be parsed", func() {
 				it.Before(func() {
-					request = httptest.NewRequest("GET", "http://example.com/all-trees?latitude=40.72309177&longitude=fail&radius=0.5", nil)
+					request = httptest.NewRequest(
+						"GET",
+						"http://example.com/all-trees?latitude=40.72309177&longitude=fail&radius=0.5",
+						nil,
+					)
 				})
 
 				it("retuns a 400 error and an error message", func() {
@@ -140,7 +152,11 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 
 			context("the radius cannot be parsed", func() {
 				it.Before(func() {
-					request = httptest.NewRequest("GET", "http://example.com/all-trees?latitude=40.72309177&longitude=-73.84421522&radius=fail", nil)
+					request = httptest.NewRequest(
+						"GET",
+						"http://example.com/all-trees?latitude=40.72309177&longitude=-73.84421522&radius=fail",
+						nil,
+					)
 				})
 
 				it("retuns a 400 error and an error message", func() {
@@ -203,7 +219,11 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 
 		context("when you make a call with an unsupported method", func() {
 			it.Before(func() {
-				request = httptest.NewRequest("POST", "http://example.com/all-trees?latitude=40.72309177&longitude=-73.84421522&radius=0.5", nil)
+				request = httptest.NewRequest(
+					"POST",
+					"http://example.com/all-trees?latitude=40.72309177&longitude=-73.84421522&radius=0.5",
+					nil,
+				)
 			})
 
 			it("returns a 405 error", func() {
