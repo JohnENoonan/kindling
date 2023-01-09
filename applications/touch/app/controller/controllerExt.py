@@ -29,6 +29,7 @@ class ControllerExt:
 		to the interactive scene
 		"""
 		op.controller.NewUser()
+		op.scene_manager.TransitionToSub('app', 'MAP', 'AREA')
 
 	def initializeUser(self):
 		"""

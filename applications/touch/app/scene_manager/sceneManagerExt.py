@@ -69,12 +69,7 @@ class ext:
 		Transition through start scenes to make sure all fields are set to the correct defualt
 		"""
 		delay_len = 120
-		for i, scene in enumerate(["ATTRACT", "INTERACTIVE", "ATTRACT"]):
-			if scene == "INTERACTIVE":
-				run( "op.scene_manager.TransitionToSub('app', '{}', 'EXPERIMENT')".format(scene), delayFrames=delay_len * i )
-				run( "op.audio_process.SetMicActive(0)".format(scene), delayFrames=delay_len * i + 100)
-			else:
-				run( "op.scene_manager.TransitionTo('app', '{}')".format(scene), delayFrames=delay_len * i )
+		for i, scene in enumerate(["ATTRACT"]):
 			run( "op('/app/scene_app/{}').TweenIn()".format(scene), delayFrames=delay_len * i )
 
 
