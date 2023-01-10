@@ -29,26 +29,26 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 		selectedTreesHandler = internal.NewSelectedTreesHandler().WithTrees([]internal.FrontendTree{
 			{
 				TreeID:    "180683",
-				Latitude:  "40.72309177",
-				Longitude: "-73.84421522",
+				Latitude:  40.72309177,
+				Longitude: -73.84421522,
 			},
 		})
 
 		allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).WithTrees([]internal.BackendTree{
 			{
 				TreeID:    "180683",
-				Latitude:  "40.72309177",
-				Longitude: "-73.84421522",
+				Latitude:  40.72309177,
+				Longitude: -73.84421522,
 			},
 			{
 				TreeID:    "203468",
-				Latitude:  "40.71760215",
-				Longitude: "-73.84915064",
+				Latitude:  40.71760215,
+				Longitude: -73.84915064,
 			},
 			{
 				TreeID:    "12345",
-				Latitude:  "50.0",
-				Longitude: "-75.0",
+				Latitude:  50.0,
+				Longitude: -75.0,
 			},
 		})
 
@@ -70,15 +70,15 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 		Expect(trees).To(ConsistOf([]internal.FrontendTree{
 			{
 				TreeID:    "180683",
-				Latitude:  "40.72309177",
-				Longitude: "-73.84421522",
+				Latitude:  40.72309177,
+				Longitude: -73.84421522,
 				Selected:  true,
 				Bio:       "Lorem ipsum",
 			},
 			{
 				TreeID:    "203468",
-				Latitude:  "40.71760215",
-				Longitude: "-73.84915064",
+				Latitude:  40.71760215,
+				Longitude: -73.84915064,
 				Selected:  false,
 				Bio:       "Lorem ipsum",
 			},
@@ -160,52 +160,6 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 					Expect(err).NotTo(HaveOccurred())
 
 					Expect(string(message)).To(Equal(`failed to convert "radius"`))
-				})
-			})
-		})
-
-		context("when the struct fields cannot be parsed", func() {
-			context("the latitude cannot be parsed", func() {
-				it.Before(func() {
-					allTreesHandler = allTreesHandler.WithTrees([]internal.BackendTree{
-						{
-							TreeID:    "180683",
-							Latitude:  "fail",
-							Longitude: "-73.84421522",
-						},
-					})
-				})
-
-				it("retuns a 400 error and an error message", func() {
-					allTreesHandler.ServeHTTP(response, request)
-					Expect(response.Code).To(Equal(400))
-
-					message, err := io.ReadAll(response.Body)
-					Expect(err).NotTo(HaveOccurred())
-
-					Expect(string(message)).To(Equal(`failed to convert "latitude" in struct`))
-				})
-			})
-
-			context("the longitude cannot be parsed", func() {
-				it.Before(func() {
-					allTreesHandler = allTreesHandler.WithTrees([]internal.BackendTree{
-						{
-							TreeID:    "180683",
-							Latitude:  "40.72309177",
-							Longitude: "fail",
-						},
-					})
-				})
-
-				it("retuns a 400 error and an error message", func() {
-					allTreesHandler.ServeHTTP(response, request)
-					Expect(response.Code).To(Equal(400))
-
-					message, err := io.ReadAll(response.Body)
-					Expect(err).NotTo(HaveOccurred())
-
-					Expect(string(message)).To(Equal(`failed to convert "longitude" in struct`))
 				})
 			})
 		})

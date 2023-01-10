@@ -30,16 +30,16 @@ func testSelectedTrees(t *testing.T, context spec.G, it spec.S) {
 			selectedTreesHandler = internal.NewSelectedTreesHandler().WithTrees([]internal.FrontendTree{
 				{
 					TreeID:    "180683",
-					Latitude:  "40.72309177",
-					Longitude: "-73.84421522",
+					Latitude:  40.72309177,
+					Longitude: -73.84421522,
 					Selected:  true,
 				},
 			})
 
 			data, err := json.Marshal(internal.FrontendTree{
 				TreeID:    "203468",
-				Latitude:  "40.71760215",
-				Longitude: "-73.84915064",
+				Latitude:  40.71760215,
+				Longitude: -73.84915064,
 			})
 			Expect(err).NotTo(HaveOccurred())
 
@@ -58,14 +58,14 @@ func testSelectedTrees(t *testing.T, context spec.G, it spec.S) {
 			Expect(selectedTreesHandler.GetTrees()).To(ConsistOf([]internal.FrontendTree{
 				{
 					TreeID:    "180683",
-					Latitude:  "40.72309177",
-					Longitude: "-73.84421522",
+					Latitude:  40.72309177,
+					Longitude: -73.84421522,
 					Selected:  true,
 				},
 				{
 					TreeID:    "203468",
-					Latitude:  "40.71760215",
-					Longitude: "-73.84915064",
+					Latitude:  40.71760215,
+					Longitude: -73.84915064,
 					Selected:  true,
 				},
 			}))
@@ -101,14 +101,14 @@ func testSelectedTrees(t *testing.T, context spec.G, it spec.S) {
 			selectedTreesHandler = internal.NewSelectedTreesHandler().WithTrees([]internal.FrontendTree{
 				{
 					TreeID:    "180683",
-					Latitude:  "40.72309177",
-					Longitude: "-73.84421522",
+					Latitude:  40.72309177,
+					Longitude: -73.84421522,
 					Selected:  true,
 				},
 				{
 					TreeID:    "203468",
-					Latitude:  "40.71760215",
-					Longitude: "-73.84915064",
+					Latitude:  40.71760215,
+					Longitude: -73.84915064,
 					Selected:  true,
 				},
 			})
@@ -131,14 +131,14 @@ func testSelectedTrees(t *testing.T, context spec.G, it spec.S) {
 			Expect(trees).To(ConsistOf([]internal.FrontendTree{
 				{
 					TreeID:    "180683",
-					Latitude:  "40.72309177",
-					Longitude: "-73.84421522",
+					Latitude:  40.72309177,
+					Longitude: -73.84421522,
 					Selected:  true,
 				},
 				{
 					TreeID:    "203468",
-					Latitude:  "40.71760215",
-					Longitude: "-73.84915064",
+					Latitude:  40.71760215,
+					Longitude: -73.84915064,
 					Selected:  true,
 				},
 			}))
@@ -166,13 +166,7 @@ func testSelectedTrees(t *testing.T, context spec.G, it spec.S) {
 	context("failure cases", func() {
 		context("when you make a call with an unsupported method", func() {
 			it.Before(func() {
-				selectedTreesHandler = internal.NewSelectedTreesHandler().WithTrees([]internal.FrontendTree{
-					{
-						TreeID:    "180683",
-						Latitude:  "40.72309177",
-						Longitude: "-73.84421522",
-					},
-				})
+				selectedTreesHandler = internal.NewSelectedTreesHandler()
 
 				request = httptest.NewRequest(
 					"PUT",

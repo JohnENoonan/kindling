@@ -73,20 +73,7 @@ func (a AllTreesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		var treesInRange []FrontendTree
 		for _, t := range a.trees {
-			lat, err := strconv.ParseFloat(t.Latitude, 64)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(`failed to convert "latitude" in struct`))
-				return
-			}
-			lon, err := strconv.ParseFloat(t.Longitude, 64)
-			if err != nil {
-				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(`failed to convert "longitude" in struct`))
-				return
-			}
-
-			mi, _ := distance(coord{Lat: lat, Lon: lon}, sourceCoord)
+			mi, _ := distance(coord{Lat: t.Latitude, Lon: t.Longitude}, sourceCoord)
 
 			if mi <= sourceRadius {
 				ft := t.MakeFront(
