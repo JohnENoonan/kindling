@@ -32,6 +32,7 @@ func testSelectedTrees(t *testing.T, context spec.G, it spec.S) {
 					TreeID:    "180683",
 					Latitude:  "40.72309177",
 					Longitude: "-73.84421522",
+					Selected:  true,
 				},
 			})
 
@@ -59,11 +60,13 @@ func testSelectedTrees(t *testing.T, context spec.G, it spec.S) {
 					TreeID:    "180683",
 					Latitude:  "40.72309177",
 					Longitude: "-73.84421522",
+					Selected:  true,
 				},
 				{
 					TreeID:    "203468",
 					Latitude:  "40.71760215",
 					Longitude: "-73.84915064",
+					Selected:  true,
 				},
 			}))
 		})
@@ -100,21 +103,13 @@ func testSelectedTrees(t *testing.T, context spec.G, it spec.S) {
 					TreeID:    "180683",
 					Latitude:  "40.72309177",
 					Longitude: "-73.84421522",
+					Selected:  true,
 				},
 				{
 					TreeID:    "203468",
 					Latitude:  "40.71760215",
 					Longitude: "-73.84915064",
-				},
-				{
-					TreeID:    "179127",
-					Latitude:  "40.72099944",
-					Longitude: "-73.84236505",
-				},
-				{
-					TreeID:    "179202",
-					Latitude:  "40.72128023",
-					Longitude: "-73.83966278",
+					Selected:  true,
 				},
 			})
 
@@ -138,23 +133,33 @@ func testSelectedTrees(t *testing.T, context spec.G, it spec.S) {
 					TreeID:    "180683",
 					Latitude:  "40.72309177",
 					Longitude: "-73.84421522",
+					Selected:  true,
 				},
 				{
 					TreeID:    "203468",
 					Latitude:  "40.71760215",
 					Longitude: "-73.84915064",
-				},
-				{
-					TreeID:    "179127",
-					Latitude:  "40.72099944",
-					Longitude: "-73.84236505",
-				},
-				{
-					TreeID:    "179202",
-					Latitude:  "40.72128023",
-					Longitude: "-73.83966278",
+					Selected:  true,
 				},
 			}))
+		})
+	})
+
+	context("IsSelected", func() {
+		it.Before(func() {
+			selectedTreesHandler = internal.NewSelectedTreesHandler().WithTrees([]internal.FrontendTree{
+				{
+					TreeID: "180683",
+				},
+			})
+		})
+
+		it("returns true if the given id is in the list", func() {
+			Expect(selectedTreesHandler.IsSelected("180683")).To(BeTrue())
+		})
+
+		it("returns false if the given id is not in the list", func() {
+			Expect(selectedTreesHandler.IsSelected("123456")).To(BeFalse())
 		})
 	})
 

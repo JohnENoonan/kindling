@@ -20,7 +20,20 @@ func (s SelectedTreesHandler) GetTrees() []FrontendTree {
 	return s.trees
 }
 
-func (s *SelectedTreesHandler) UpdateTrees(tree FrontendTree) {
+func (s *SelectedTreesHandler) IsSelected(id string) bool {
+	var selected bool
+
+	// Ensures that the list is not being updated
+	s.mutex.Lock()
+	for _, t := range s.trees {
+		if t.TreeID == id {
+			selected = true
+			break
+		}
+	}
+	s.mutex.Unlock()
+
+	return selected
 }
 
 // This must create a pointer to the handler to allow for the list the be
@@ -40,6 +53,9 @@ func (s *SelectedTreesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
+		tree.Selected = true
+
+		// Ensure that the list is not being read or updated in another thread
 		s.mutex.Lock()
 		s.trees = append(s.trees, tree)
 		s.mutex.Unlock()

@@ -21,8 +21,9 @@ type coord struct {
 }
 
 type AllTreesHandler struct {
-	trees       []BackendTree
-	returnLimit int
+	trees                []BackendTree
+	selectedTreesHandler *SelectedTreesHandler
+	returnLimit          int
 }
 
 func (a AllTreesHandler) WithTrees(trees []BackendTree) AllTreesHandler {
@@ -35,9 +36,10 @@ func (a AllTreesHandler) WithReturnLimit(returnLimit int) AllTreesHandler {
 	return a
 }
 
-func NewAllTreesHandler() AllTreesHandler {
+func NewAllTreesHandler(selectedTreesHandler *SelectedTreesHandler) AllTreesHandler {
 	return AllTreesHandler{
-		returnLimit: 15, //default return limit
+		returnLimit:          15,                   //default return limit
+		selectedTreesHandler: selectedTreesHandler, //need this to check if the tree has been selected or not
 	}
 }
 
@@ -87,7 +89,10 @@ func (a AllTreesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			mi, _ := distance(coord{Lat: lat, Lon: lon}, sourceCoord)
 
 			if mi <= sourceRadius {
-				ft := t.MakeFront()
+				ft := t.MakeFront(
+					a.selectedTreesHandler.IsSelected(t.TreeID),
+					"Lorem ipsum",
+				)
 				treesInRange = append(treesInRange, ft)
 			}
 		}

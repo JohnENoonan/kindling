@@ -35,12 +35,12 @@ func main() {
 
 	log.Println("Data is loaded!")
 
-	allTreesHandler := internal.NewAllTreesHandler().WithTrees(trees)
-	http.Handle("/all-trees", allTreesHandler)
-
 	// TODO:Add data loading and saving internally (this will require another modifier)
 	selectedTreesHandler := internal.NewSelectedTreesHandler()
 	http.Handle("/selected-trees", selectedTreesHandler)
+
+	allTreesHandler := internal.NewAllTreesHandler(selectedTreesHandler).WithTrees(trees)
+	http.Handle("/all-trees", allTreesHandler)
 
 	log.Println("Server is now live at localhost:8090")
 	http.ListenAndServe(":8090", nil)

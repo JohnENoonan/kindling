@@ -19,13 +19,22 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 		withT  = NewWithT(t)
 		Expect = withT.Expect
 
-		allTreesHandler internal.AllTreesHandler
-		request         *http.Request
-		response        *httptest.ResponseRecorder
+		allTreesHandler      internal.AllTreesHandler
+		selectedTreesHandler *internal.SelectedTreesHandler
+		request              *http.Request
+		response             *httptest.ResponseRecorder
 	)
 
 	it.Before(func() {
-		allTreesHandler = internal.NewAllTreesHandler().WithTrees([]internal.BackendTree{
+		selectedTreesHandler = internal.NewSelectedTreesHandler().WithTrees([]internal.FrontendTree{
+			{
+				TreeID:    "180683",
+				Latitude:  "40.72309177",
+				Longitude: "-73.84421522",
+			},
+		})
+
+		allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).WithTrees([]internal.BackendTree{
 			{
 				TreeID:    "180683",
 				Latitude:  "40.72309177",
@@ -35,16 +44,6 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 				TreeID:    "203468",
 				Latitude:  "40.71760215",
 				Longitude: "-73.84915064",
-			},
-			{
-				TreeID:    "179127",
-				Latitude:  "40.72099944",
-				Longitude: "-73.84236505",
-			},
-			{
-				TreeID:    "179202",
-				Latitude:  "40.72128023",
-				Longitude: "-73.83966278",
 			},
 			{
 				TreeID:    "12345",
@@ -73,28 +72,22 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 				TreeID:    "180683",
 				Latitude:  "40.72309177",
 				Longitude: "-73.84421522",
+				Selected:  true,
+				Bio:       "Lorem ipsum",
 			},
 			{
 				TreeID:    "203468",
 				Latitude:  "40.71760215",
 				Longitude: "-73.84915064",
-			},
-			{
-				TreeID:    "179127",
-				Latitude:  "40.72099944",
-				Longitude: "-73.84236505",
-			},
-			{
-				TreeID:    "179202",
-				Latitude:  "40.72128023",
-				Longitude: "-73.83966278",
+				Selected:  false,
+				Bio:       "Lorem ipsum",
 			},
 		}))
 	})
 
 	context("when there are more than allotted results", func() {
 		it.Before(func() {
-			allTreesHandler = allTreesHandler.WithReturnLimit(2)
+			allTreesHandler = allTreesHandler.WithReturnLimit(1)
 		})
 
 		it("returns only 2 trees", func() {
@@ -104,7 +97,7 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 			err := json.NewDecoder(response.Body).Decode(&trees)
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(len(trees)).To(Equal(2))
+			Expect(len(trees)).To(Equal(1))
 		})
 	})
 
