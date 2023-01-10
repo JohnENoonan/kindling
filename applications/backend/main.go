@@ -25,10 +25,16 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer data.Close()
 
 	var trees []internal.BackendTree
 	err = json.NewDecoder(data).Decode(&trees)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Close the file here otherwise it will stay open for the entire life time
+	// of the server
+	err = data.Close()
 	if err != nil {
 		log.Fatal(err)
 	}

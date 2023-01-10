@@ -38,8 +38,8 @@ func (a AllTreesHandler) WithReturnLimit(returnLimit int) AllTreesHandler {
 
 func NewAllTreesHandler(selectedTreesHandler *SelectedTreesHandler) AllTreesHandler {
 	return AllTreesHandler{
-		returnLimit:          15,                   //default return limit
-		selectedTreesHandler: selectedTreesHandler, //need this to check if the tree has been selected or not
+		returnLimit:          15,                   // default return limit
+		selectedTreesHandler: selectedTreesHandler, // need this to check if the tree has been selected or not
 	}
 }
 
