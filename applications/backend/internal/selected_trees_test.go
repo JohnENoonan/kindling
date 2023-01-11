@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"net/http"
@@ -23,18 +25,28 @@ func testSelectedTrees(t *testing.T, context spec.G, it spec.S) {
 		selectedTreesHandler *internal.SelectedTreesHandler
 		request              *http.Request
 		response             *httptest.ResponseRecorder
+
+		dataFile string
 	)
 
 	context("POST", func() {
 		it.Before(func() {
-			selectedTreesHandler = internal.NewSelectedTreesHandler().WithTrees([]internal.FrontendTree{
-				{
-					TreeID:    "180683",
-					Latitude:  40.72309177,
-					Longitude: -73.84421522,
-					Selected:  true,
-				},
-			})
+			f, err := os.CreateTemp("", "selected.json")
+			Expect(err).NotTo(HaveOccurred())
+			defer f.Close()
+
+			dataFile = f.Name()
+
+			selectedTreesHandler = internal.NewSelectedTreesHandler().
+				WithTrees([]internal.FrontendTree{
+					{
+						TreeID:    "180683",
+						Latitude:  40.72309177,
+						Longitude: -73.84421522,
+						Selected:  true,
+					},
+				}).
+				WithDataFile(dataFile)
 
 			data, err := json.Marshal(internal.FrontendTree{
 				TreeID:    "203468",
@@ -51,11 +63,24 @@ func testSelectedTrees(t *testing.T, context spec.G, it spec.S) {
 			response = httptest.NewRecorder()
 		})
 
+		it.After(func() {
+			Expect(os.RemoveAll(dataFile)).To(Succeed())
+		})
+
 		it("adds the given tree to the list of known trees", func() {
 			selectedTreesHandler.ServeHTTP(response, request)
 
 			Expect(response.Code).To(Equal(201))
-			Expect(selectedTreesHandler.GetTrees()).To(ConsistOf([]internal.FrontendTree{
+
+			f, err := os.Open(dataFile)
+			Expect(err).NotTo(HaveOccurred())
+			defer f.Close()
+
+			var trees []internal.FrontendTree
+			err = json.NewDecoder(f).Decode(&trees)
+			Expect(err).NotTo(HaveOccurred())
+
+			Expect(trees).To(ConsistOf([]internal.FrontendTree{
 				{
 					TreeID:    "180683",
 					Latitude:  40.72309177,
@@ -72,25 +97,54 @@ func testSelectedTrees(t *testing.T, context spec.G, it spec.S) {
 		})
 
 		context("failure cases", func() {
-			context("the request body cannot be parsed", func() {
-				context("the latitude cannot be parsed", func() {
-					it.Before(func() {
-						request = httptest.NewRequest(
-							"POST",
-							"http://example.com/selected-trees",
-							bytes.NewBuffer([]byte(`%%%`)),
-						)
-					})
+			context("when the request body cannot be parsed", func() {
+				it.Before(func() {
+					request = httptest.NewRequest(
+						"POST",
+						"http://example.com/selected-trees",
+						bytes.NewBuffer([]byte(`%%%`)),
+					)
+				})
 
-					it("retuns a 400 error and an error message", func() {
-						selectedTreesHandler.ServeHTTP(response, request)
-						Expect(response.Code).To(Equal(400))
+				it("retuns a 400 error and an error message", func() {
+					selectedTreesHandler.ServeHTTP(response, request)
+					Expect(response.Code).To(Equal(400))
 
-						message, err := io.ReadAll(response.Body)
-						Expect(err).NotTo(HaveOccurred())
+					message, err := io.ReadAll(response.Body)
+					Expect(err).NotTo(HaveOccurred())
 
-						Expect(string(message)).To(Equal(`failed to parse JSON in the request body`))
-					})
+					Expect(string(message)).To(Equal(`failed to parse JSON in the request body`))
+				})
+			})
+
+			context("when the data file cannot be accessed or created", func() {
+				var tempDir string
+
+				it.Before(func() {
+					var err error
+					tempDir, err = os.MkdirTemp("", "temp")
+					Expect(err).NotTo(HaveOccurred())
+
+					dataFile = filepath.Join(tempDir, "selected.json")
+
+					Expect(os.Chmod(tempDir, 0000)).To(Succeed())
+
+					selectedTreesHandler = selectedTreesHandler.WithDataFile(dataFile)
+				})
+
+				it.After(func() {
+					Expect(os.Chmod(tempDir, os.ModePerm)).To(Succeed())
+					Expect(os.RemoveAll(tempDir))
+				})
+
+				it("retuns a 400 error and an error message", func() {
+					selectedTreesHandler.ServeHTTP(response, request)
+					Expect(response.Code).To(Equal(400))
+
+					message, err := io.ReadAll(response.Body)
+					Expect(err).NotTo(HaveOccurred())
+
+					Expect(string(message)).To(Equal(`failed to open or create data file`))
 				})
 			})
 		})

@@ -3,7 +3,7 @@
 For testing purpose you can launch the backend with the following command
 
 ```
-go run main.go --data-file-path=/path/to/data/file
+go run main.go --data-file-path=/path/to/data/file --selected-file-path=/path/to/selected/tree/file
 ```
 
 This will launch a sever listening on port `8090`.
