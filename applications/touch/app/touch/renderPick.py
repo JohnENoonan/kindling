@@ -27,6 +27,13 @@
 import numpy as np
 
 map_geo = op("/app/scene_app/MAP/map_geo/null1")
+
+area_slider_geo = op("/app/scene_app/MAP/area_slider_geo/slider")
+area_slider = op("/app/scene_app/MAP/area_slider_geo")
+
+zoom_slider_geo = op("/app/scene_app/MAP/zoom_slider_geo/slider")
+zoom_slider = op("/app/scene_app/MAP/zoom_slider_geo")
+
 map_shader = op("/app/scene_app/MAP/map_shader")
 map_data = op("map_data")
 
@@ -34,11 +41,14 @@ def setDelta(delta):
 	map_data.par.value0.val = delta[0]
 	map_data.par.value1.val = delta[1]
 
+def setCurrent(current):
+	map_data.par.value2.val = current[0]
+	map_data.par.value3.val = current[1]
+
 def onEvents(renderPickDat, events, eventsPrev):
 
 	for event, eventPrev in zip(events, eventsPrev):
-		# print(event.selectedOp)
-		#insert code for event, eventsPrev here
+		# drag map
 		if event.selectedOp == map_geo:
 			current_uv = (event.u, event.v)
 			prev_uv = me.fetch("prev_uv", current_uv)
@@ -48,10 +58,18 @@ def onEvents(renderPickDat, events, eventsPrev):
 			if event.select:
 				delta = tuple(np.subtract(current_uv, prev_uv))
 				setDelta(delta)
+				setCurrent(current_uv)
 				me.store("prev_uv", current_uv)
 			if event.selectEnd:
 				print("select end")
 				setDelta((0.0, 0.0))
+		# drag area slider
+		elif event.selectedOp == area_slider_geo and event.select:
+			area_slider.par.Value = event.texture[0];
+		# drag zoom slider
+		elif event.selectedOp == zoom_slider_geo and event.select:
+			zoom_slider.par.Value = event.texture[0];
+
 
 	return
 
