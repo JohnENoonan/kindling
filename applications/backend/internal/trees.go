@@ -1,7 +1,7 @@
 package internal
 
 type BackendTree struct {
-	TreeID       string  `json:"tree_id"`
+	TreeID       int     `json:"tree_id"`
 	SpeciesID    int     `json:"species_id"`
 	Name         string  `json:"name"`
 	Diameter     int     `json:"diameter"`
@@ -20,7 +20,7 @@ type BackendTree struct {
 }
 
 type FrontendTree struct {
-	TreeID    string  `json:"tree_id"`
+	TreeID    int     `json:"tree_id"`
 	SpeciesID int     `json:"species_id"`
 	SpcLatin  string  `json:"spc_latin" `
 	SpcCommon string  `json:"spc_common"`

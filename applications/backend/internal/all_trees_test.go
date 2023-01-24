@@ -28,7 +28,7 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 	it.Before(func() {
 		selectedTreesHandler = internal.NewSelectedTreesHandler().WithTrees([]internal.FrontendTree{
 			{
-				TreeID:    "180683",
+				TreeID:    180683,
 				Latitude:  40.72309177,
 				Longitude: -73.84421522,
 			},
@@ -36,17 +36,17 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 
 		allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).WithTrees([]internal.BackendTree{
 			{
-				TreeID:    "180683",
+				TreeID:    180683,
 				Latitude:  40.72309177,
 				Longitude: -73.84421522,
 			},
 			{
-				TreeID:    "203468",
+				TreeID:    203468,
 				Latitude:  40.71760215,
 				Longitude: -73.84915064,
 			},
 			{
-				TreeID:    "12345",
+				TreeID:    12345,
 				Latitude:  50.0,
 				Longitude: -75.0,
 			},
@@ -69,14 +69,14 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 
 		Expect(trees).To(ConsistOf([]internal.FrontendTree{
 			{
-				TreeID:    "180683",
+				TreeID:    180683,
 				Latitude:  40.72309177,
 				Longitude: -73.84421522,
 				Selected:  true,
 				Bio:       "Lorem ipsum",
 			},
 			{
-				TreeID:    "203468",
+				TreeID:    203468,
 				Latitude:  40.71760215,
 				Longitude: -73.84915064,
 				Selected:  false,

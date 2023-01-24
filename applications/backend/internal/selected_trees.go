@@ -23,7 +23,7 @@ func (s *SelectedTreesHandler) WithDataFile(dataFile string) *SelectedTreesHandl
 	return s
 }
 
-func (s *SelectedTreesHandler) IsSelected(id string) bool {
+func (s *SelectedTreesHandler) IsSelected(id int) bool {
 	var selected bool
 
 	// Ensures that the list is not being updated
