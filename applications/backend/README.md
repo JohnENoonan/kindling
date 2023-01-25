@@ -8,6 +8,8 @@ go run main.go --data-file-path=/path/to/data/file --selected-file-path=/path/to
 
 This will launch a sever listening on port `8090`.
 
+The selected file path will be created if there is not an existing file there.
+
 ## API Calls
 
 ### Get all trees (15 is the default return for now) trees in a radius from a point
