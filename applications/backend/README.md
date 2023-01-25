@@ -14,7 +14,7 @@ The selected file path will be created if there is not an existing file there.
 
 ### Get all trees (15 is the default return for now) trees in a radius from a point
 ```
-curl 'localhost:8090/all-trees?latitude=x&longitutde=y&radius=z'
+curl 'localhost:8090/all-trees?latitude=x&longitude=y&radius=z'
 ```
 
 ### Add a tree to the selected list
