@@ -10,6 +10,8 @@ uniform vec4 uArea;
 
 // unpack data
 float uZoom = 1.0 / max(.001, uZoomData.x); // amount to zoom in
+float uStrokeWidth = uZoomData.y;
+float uStrokeSoftness = uZoomData.z;
 
 vec2 uMousePan = uMouseData.xy; // values used to pan the map
 
@@ -43,17 +45,16 @@ void main()
 
 
 
-	vec4 color = vec4(1.0);
+	vec4 color = vec4(0.063, 0.333, 0.435, 1.0);
 	// color.rg = mapUV;
 	// color = texture(sTD2DInputs[0], mapUV);
-	color = textureBicubic(sTD2DInputs[0], mapUV);
-	float width = .8;
-	float softness = .05;
-	color = vec4(smoothstep(width - softness, width + softness, color.a));
+	vec4 mapTex = textureBicubic(sTD2DInputs[0], mapUV);
+	float roads = smoothstep(uStrokeWidth - uStrokeSoftness, uStrokeWidth + uStrokeSoftness, mapTex.a);
+	color = mix(color, vec4(roads), float(roads > 0.1));
 	color.rgb *= color.a;
 
 	// draw pinned area
-	float areaCircle = sdCircle(mapUV - pinuv.yx, uAreaRad / MAP_MAX_DIST);
+	float areaCircle = sdCircle(texCorrect * (mapUV - pinuv.yx), uAreaRad / MAP_MAX_DIST);
 	float circleAlpha = .7 * float(areaCircle < 0.0);
 	vec3 circleColor = vec3(1.0, 0.0, 1.0);
 	color.rgb = circleColor * circleAlpha + color.rgb * (1.0 - circleAlpha);

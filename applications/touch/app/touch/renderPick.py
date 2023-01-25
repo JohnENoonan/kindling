@@ -26,7 +26,7 @@
 #	custom	 		- Dictionary of selected custom attributes
 import numpy as np
 
-map_geo = op("/app/scene_app/MAP/map_geo/null1")
+
 
 area_slider_geo = op("/app/scene_app/MAP/area_slider_geo/slider")
 area_slider = op("/app/scene_app/MAP/area_slider_geo")
@@ -34,7 +34,11 @@ area_slider = op("/app/scene_app/MAP/area_slider_geo")
 zoom_slider_geo = op("/app/scene_app/MAP/zoom_slider_geo/slider")
 zoom_slider = op("/app/scene_app/MAP/zoom_slider_geo")
 
+map_submit_geo = op("/app/scene_app/MAP/submit_geo/null1")
+
+map_geo = op("/app/scene_app/MAP/map_geo/null1")
 map_shader = op("/app/scene_app/MAP/map_shader")
+# map data is a constant used to write out
 map_data = op("map_data")
 
 def setDelta(delta):
@@ -50,25 +54,27 @@ def onEvents(renderPickDat, events, eventsPrev):
 	for event, eventPrev in zip(events, eventsPrev):
 		# drag map
 		if event.selectedOp == map_geo:
-			current_uv = (event.u, event.v)
+			current_uv = event.texture
 			prev_uv = me.fetch("prev_uv", current_uv)
 			if event.selectStart:
-				print("start click")
 				prev_uv = current_uv
 			if event.select:
 				delta = tuple(np.subtract(current_uv, prev_uv))
 				setDelta(delta)
 				setCurrent(current_uv)
 				me.store("prev_uv", current_uv)
-			if event.selectEnd:
-				print("select end")
+			if event.selectEnd or event.pickOp != map_geo:
 				setDelta((0.0, 0.0))
 		# drag area slider
-		elif event.selectedOp == area_slider_geo and event.select:
-			area_slider.par.Value = event.texture[0];
+		elif event.selectedOp == area_slider_geo and event.pickOp == area_slider_geo and event.select:
+			area_slider.par.Value = event.texture[0]
 		# drag zoom slider
-		elif event.selectedOp == zoom_slider_geo and event.select:
-			zoom_slider.par.Value = event.texture[0];
+		elif event.selectedOp == zoom_slider_geo and event.pickOp == zoom_slider_geo and event.select:
+			zoom_slider.par.Value = event.texture[0]
+		# submit map
+		elif event.selectedOp == map_submit_geo and event.selectEnd:
+			op.log.Debug("submit search")
+
 
 
 	return
