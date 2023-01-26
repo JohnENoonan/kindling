@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
 
 	gogpt "github.com/sashabaranov/go-gpt3"
 )
@@ -12,7 +13,7 @@ func main() {
 	c := gogpt.NewClient(os.Getenv("OPENAI_TOKEN"))
 	ctx := context.Background()
 
-	prompt := "Write a dating profile for a red oak that is 200 characters or less that does not mention age:"
+	prompt := "Write a dating profile that is 200 characters long for a red oak:"
 
 	req := gogpt.CompletionRequest{
 		Model:     gogpt.GPT3TextDavinci003,
@@ -22,6 +23,7 @@ func main() {
 
 	var bios []string
 
+	n := time.Now()
 	for i := 0; i < 5; i++ {
 		resp, err := c.CreateCompletion(ctx, req)
 		if err != nil {
@@ -31,8 +33,11 @@ func main() {
 		bios = append(bios, resp.Choices[0].Text)
 	}
 
-	fmt.Println(prompt)
+	fmt.Println("#### " + prompt)
 	for _, b := range bios {
 		fmt.Println(b)
 	}
+
+	fmt.Println(time.Since(n))
+
 }
