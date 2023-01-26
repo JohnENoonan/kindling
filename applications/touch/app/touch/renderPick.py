@@ -74,6 +74,7 @@ def onEvents(renderPickDat, events, eventsPrev):
 		# submit map
 		elif event.selectedOp == map_submit_geo and event.selectEnd:
 			op.log.Debug("submit search")
+			print(op.data.QueryCurrentArea())
 
 
 
