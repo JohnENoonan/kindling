@@ -73,8 +73,7 @@ def onEvents(renderPickDat, events, eventsPrev):
 			zoom_slider.par.Value = event.texture[0]
 		# submit map
 		elif event.selectedOp == map_submit_geo and event.selectEnd:
-			op.log.Debug("submit search")
-			print(op.data.QueryCurrentArea())
+			op.data.QueryCurrentArea()
 
 
 
