@@ -13,3 +13,8 @@ dataLight		14	1.0	1.0
 dataLightSmall		13	0.5	1.0	
 attractTitleProject		60	0.0	1.0
 buttonMed		14	0.0	1.0
+profileName		30	0.0	1.0
+profileBio		30	0.0	1.0
+profileSubHeader		30	0.0	1.0
+profileName		30	0.0	1.0
+profileName		20	0.0	1.0
