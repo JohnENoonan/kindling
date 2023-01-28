@@ -61,3 +61,14 @@ class ControllerExt:
 			blackout_trigger = op("blackout_trigger")
 			blackout_trigger.par.triggerpulse.pulse()
 			
+
+	####### App logic #######
+	def SearchArea(self):
+		# query the server
+		if op.data.QueryCurrentArea():
+			# there are trees to match with, move on to the matching scene
+			op.scene_manager.TransitionTo('app', 'MATCHING')
+		else:
+			# there are no trees there, raise an error and try again
+			pass
+

@@ -24,6 +24,7 @@ class DataExt:
 			'longitude': lon,
 			'radius': rad,
 		}
+		op.log.Verbose("Query {} with {}".format(self.areaUrl, params))
 		response = requests.get(self.areaUrl, params=params)
 		return response.json()
 
@@ -53,10 +54,12 @@ class DataExt:
 		lat = self.pinpointOp[1].eval()
 		lon = self.pinpointOp[0].eval()
 		response = self.QueryArea(lat, lon, rad)
-		if len(response) > 0:
+		if response is not None:
 			self.processResponse(response)
+			return True
 		else:
 			op.log.Error(f"No trees returned from query to {lat}, {lon} with radius {rad}")
+			return False
 
 	def GetSelectedTrees(self):
 		response = requests.get(self.selectedTreesUrl)

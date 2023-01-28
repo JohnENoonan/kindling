@@ -69,6 +69,7 @@ class ext:
 		Transition through start scenes to make sure all fields are set to the correct defualt
 		"""
 		delay_len = 120
+		self.TransitionTo('app', 'ATTRACT')
 		for i, scene in enumerate(["ATTRACT"]):
 			run( "op('/app/scene_app/{}').TweenIn()".format(scene), delayFrames=delay_len * i )
 
