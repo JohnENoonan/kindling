@@ -12,6 +12,7 @@ uniform vec4 uArea;
 float uZoom = 1.0 / max(.001, uZoomData.x); // amount to zoom in
 float uStrokeWidth = uZoomData.y;
 float uStrokeSoftness = uZoomData.z;
+float uTime = uZoomData.w;
 
 vec2 uMousePan = uMouseData.xy; // values used to pan the map
 
@@ -24,30 +25,40 @@ float frameAspect = uRes.x / uRes.y;
 float texAspect = uTD2DInfos[0].res.z / uTD2DInfos[0].res.w; // aspect ratio of the map
 float texFrameRatio = texAspect / frameAspect;
 
+float wave(vec2 uv, float speed, float scl) {
+	// create repeated waves. Takes uv. Tiling is controled by scl
+	float curve = 0.4 * sin(9.25 * uv.x + (uTime * speed)) ;
+	float waveWidth = .05 * clamp(uZoom, 0.0, 1.0);
+	float waveSoftness = waveWidth * .1;
+	float lineAShape = clamp(distance(curve + scl * mod(uv.y, 1.0/scl), 0.5) * 1.0, 0.0, 1.0);
+	return 1.0-smoothstep(waveWidth - waveSoftness, waveWidth + waveSoftness,abs(lineAShape));
+}
+
+
+
 out vec4 fragColor;
 void main()
 {
-	// vec4 color = texture(sTD2DInputs[0], vUV.st);
-
+	// create uv and mappers from space to space
 	vec2 uv = vUV.st;
 	vec2 frameToMap = vec2(1.0, 1.0/texFrameRatio); // map screen space of the frame to map space
 	vec2 texCorrect = vec2(texAspect, 1.0); // maps map to scren
-
 	vec2 aspectSize = uRes / uTD2DInfos[0].res.zw;
 
 	vec2 mapUV = uv * aspectSize;
+	// apply translation and zoom
 	mapUV = (mapUV * uZoom) + (-uMousePan + vec2(.5) - vec2(uZoom/2.0) * aspectSize);
-
-	vec2 pin = vec2( 40.68903,-73.96961);
+	// get the map space of the pinned location
 	vec2 pinuv = remap(uPinPos, MIN_LAT_LON, MAX_LAT_LON, vec2(0.0), vec2(1.0));
 
 
 
 
-
-	vec4 color = vec4(0.063, 0.333, 0.435, 1.0);
-	// color.rg = mapUV;
-	// color = texture(sTD2DInputs[0], mapUV);
+	// make ocean
+	vec3 ocean = vec3(0.063, 0.333, 0.435);
+	vec4 color = vec4(ocean * (1.0 - .1 * wave(mapUV, .4, 20.0)), 1.0);
+	
+	// create roads
 	vec4 mapTex = textureBicubic(sTD2DInputs[0], mapUV);
 	float roads = smoothstep(uStrokeWidth - uStrokeSoftness, uStrokeWidth + uStrokeSoftness, mapTex.a);
 	color = mix(color, vec4(roads), float(roads > 0.1));
@@ -58,6 +69,8 @@ void main()
 	float circleAlpha = .7 * float(areaCircle < 0.0);
 	vec3 circleColor = vec3(1.0, 0.0, 1.0);
 	color.rgb = circleColor * circleAlpha + color.rgb * (1.0 - circleAlpha);
+
+	
 
 	fragColor = TDOutputSwizzle(color);
 }
