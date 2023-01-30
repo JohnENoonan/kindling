@@ -281,7 +281,7 @@ func main() {
 			break
 		}
 
-		for j := 0; j < iterations; j++ {
+		for j := 0; j < (iterations - len(b.Bios)); j++ {
 			req := gogpt.CompletionRequest{
 				Model:     gogpt.GPT3TextDavinci003,
 				MaxTokens: 256,
