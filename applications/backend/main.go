@@ -63,7 +63,6 @@ func main() {
 
 	// If the existing file is of size 0 do not try and parse as it is a new file
 	if info.Size() != 0 {
-		selected, err := os.Open(selectedFilePath)
 		err = json.NewDecoder(selected).Decode(&selectedTrees)
 		if err != nil {
 			log.Fatal(err)
