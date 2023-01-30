@@ -258,9 +258,9 @@ func main() {
 			continue
 		}
 
-		if counter%25 == 0 {
+		if counter%100 == 0 {
 			fmt.Println("Creating checkpoint!")
-			checkPoint, err := os.Create(filepath.Join("checkpoints", fmt.Sprintf("checkpoint%d.json", counter/25)))
+			checkPoint, err := os.Create(filepath.Join("checkpoints", fmt.Sprintf("checkpoint%d.json", counter/100)))
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -276,7 +276,7 @@ func main() {
 			}
 		}
 
-		if counter > 200 {
+		if counter > 1000 {
 			fmt.Printf("Went to index %d\n", i-1)
 			break
 		}
@@ -297,7 +297,7 @@ func main() {
 
 			bg++
 
-			if bg%10 == 0 {
+			if bg%100 == 0 {
 				fmt.Printf("%d bios generated, currently on the %d identifier of the run\n", bg, counter)
 			}
 		}
