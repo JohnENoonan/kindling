@@ -84,6 +84,9 @@ func main() {
 	allTreesHandler := internal.NewAllTreesHandler(selectedTreesHandler).WithTrees(trees)
 	http.Handle("/all-trees", allTreesHandler)
 
+	randomTreeHandler := internal.NewRandomTreeHandler(&allTreesHandler)
+	http.Handle("/random-tree", randomTreeHandler)
+
 	log.Println("Server is now live at localhost:8090")
 	http.ListenAndServe(":8090", nil)
 }

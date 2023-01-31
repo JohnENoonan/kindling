@@ -276,7 +276,7 @@ func main() {
 			}
 		}
 
-		if counter > 1000 {
+		if counter > 200 {
 			fmt.Printf("Went to index %d\n", i-1)
 			break
 		}
@@ -290,15 +290,15 @@ func main() {
 
 			resp, err := c.CreateCompletion(ctx, req)
 			if err != nil {
-				return
+				log.Fatal(err)
 			}
 
 			bioTable[i].Bios = append(bioTable[i].Bios, strings.TrimSpace(resp.Choices[0].Text))
 
 			bg++
 
-			if bg%100 == 0 {
-				fmt.Printf("%d bios generated, currently on the %d identifier of the run\n", bg, counter)
+			if bg%25 == 0 {
+				fmt.Printf("%d bios generated, currently on the %d identifier of the run. We have reached index %d\n", bg, counter, i)
 			}
 		}
 		counter++

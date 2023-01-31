@@ -17,6 +17,7 @@ func TestBackend(t *testing.T) {
 
 	suite := spec.New("backend", spec.Report(report.Terminal{}))
 	suite("AllTrees", testAllTrees)
+	suite("RandomTree", testRandomTree)
 	suite("SelectedTrees", testSelectedTrees)
 	suite.Run(t)
 }

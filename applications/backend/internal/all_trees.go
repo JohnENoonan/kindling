@@ -2,6 +2,7 @@ package internal
 
 import (
 	"encoding/json"
+	"fmt"
 	"math"
 	"math/rand"
 	"net/http"
@@ -26,6 +27,13 @@ type AllTreesHandler struct {
 	returnLimit          int
 }
 
+func NewAllTreesHandler(selectedTreesHandler *SelectedTreesHandler) AllTreesHandler {
+	return AllTreesHandler{
+		returnLimit:          15,                   // default return limit
+		selectedTreesHandler: selectedTreesHandler, // need this to check if the tree has been selected or not
+	}
+}
+
 func (a AllTreesHandler) WithTrees(trees []BackendTree) AllTreesHandler {
 	a.trees = trees
 	return a
@@ -36,11 +44,15 @@ func (a AllTreesHandler) WithReturnLimit(returnLimit int) AllTreesHandler {
 	return a
 }
 
-func NewAllTreesHandler(selectedTreesHandler *SelectedTreesHandler) AllTreesHandler {
-	return AllTreesHandler{
-		returnLimit:          15,                   // default return limit
-		selectedTreesHandler: selectedTreesHandler, // need this to check if the tree has been selected or not
+func (a *AllTreesHandler) RandomTree() (BackendTree, error) {
+	rand.Seed(time.Now().Unix())
+	for i := 0; i < 5; i++ {
+		if t := a.trees[rand.Intn(len(a.trees))]; !a.selectedTreesHandler.IsSelected(t.TreeID) {
+			return t, nil
+		}
 	}
+
+	return BackendTree{}, fmt.Errorf("could not find random tree what was not selected after 5 tries")
 }
 
 func (a AllTreesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -76,11 +88,10 @@ func (a AllTreesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			mi, _ := distance(coord{Lat: t.Latitude, Lon: t.Longitude}, sourceCoord)
 
 			if mi <= sourceRadius {
-				ft := t.MakeFront(
-					a.selectedTreesHandler.IsSelected(t.TreeID),
-					"Lorem ipsum",
-				)
-				treesInRange = append(treesInRange, ft)
+				if a.selectedTreesHandler.IsSelected(t.TreeID) {
+					continue
+				}
+				treesInRange = append(treesInRange, t.MakeFront())
 			}
 		}
 

@@ -25,157 +25,222 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 		response             *httptest.ResponseRecorder
 	)
 
-	it.Before(func() {
-		selectedTreesHandler = internal.NewSelectedTreesHandler().WithTrees([]internal.FrontendTree{
-			{
-				TreeID:    180683,
-				Latitude:  40.72309177,
-				Longitude: -73.84421522,
-			},
-		})
-
-		allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).WithTrees([]internal.BackendTree{
-			{
-				TreeID:    180683,
-				Latitude:  40.72309177,
-				Longitude: -73.84421522,
-			},
-			{
-				TreeID:    203468,
-				Latitude:  40.71760215,
-				Longitude: -73.84915064,
-			},
-			{
-				TreeID:    12345,
-				Latitude:  50.0,
-				Longitude: -75.0,
-			},
-		})
-
-		request = httptest.NewRequest(
-			"GET",
-			"http://example.com/all-trees?latitude=40.72309177&longitude=-73.84421522&radius=0.5",
-			nil,
-		)
-		response = httptest.NewRecorder()
-	})
-
-	it("returns all trees in a given area", func() {
-		allTreesHandler.ServeHTTP(response, request)
-
-		var trees []internal.FrontendTree
-		err := json.NewDecoder(response.Body).Decode(&trees)
-		Expect(err).NotTo(HaveOccurred())
-
-		Expect(trees).To(ConsistOf([]internal.FrontendTree{
-			{
-				TreeID:    180683,
-				Latitude:  40.72309177,
-				Longitude: -73.84421522,
-				Selected:  true,
-				Bio:       "Lorem ipsum",
-			},
-			{
-				TreeID:    203468,
-				Latitude:  40.71760215,
-				Longitude: -73.84915064,
-				Selected:  false,
-				Bio:       "Lorem ipsum",
-			},
-		}))
-	})
-
-	context("when there are more than allotted results", func() {
+	context("GET", func() {
 		it.Before(func() {
-			allTreesHandler = allTreesHandler.WithReturnLimit(1)
+			selectedTreesHandler = internal.NewSelectedTreesHandler().WithTrees([]internal.FrontendTree{
+				{
+					TreeID:    180683,
+					Latitude:  40.72309177,
+					Longitude: -73.84421522,
+				},
+			})
+
+			allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).WithTrees([]internal.BackendTree{
+				{
+					TreeID:    180683,
+					Latitude:  40.72309177,
+					Longitude: -73.84421522,
+				},
+				{
+					TreeID:    203468,
+					Latitude:  40.71760215,
+					Longitude: -73.84915064,
+				},
+				{
+					TreeID:    203203,
+					Latitude:  40.71760215,
+					Longitude: -73.84915064,
+				},
+				{
+					TreeID:    12345,
+					Latitude:  50.0,
+					Longitude: -75.0,
+				},
+			})
+
+			request = httptest.NewRequest(
+				"GET",
+				"http://example.com/all-trees?latitude=40.72309177&longitude=-73.84421522&radius=0.5",
+				nil,
+			)
+			response = httptest.NewRecorder()
 		})
 
-		it("returns only 2 trees", func() {
+		it("returns all trees in a given area", func() {
 			allTreesHandler.ServeHTTP(response, request)
 
 			var trees []internal.FrontendTree
 			err := json.NewDecoder(response.Body).Decode(&trees)
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(len(trees)).To(Equal(1))
+			Expect(trees).To(ConsistOf([]internal.FrontendTree{
+				{
+					TreeID:    203468,
+					Latitude:  40.71760215,
+					Longitude: -73.84915064,
+					Selected:  false,
+					Bio:       "Lorem ipsum",
+				},
+				{
+					TreeID:    203203,
+					Latitude:  40.71760215,
+					Longitude: -73.84915064,
+					Selected:  false,
+					Bio:       "Lorem ipsum",
+				},
+			}))
+		})
+
+		context("when there are more than allotted results", func() {
+			it.Before(func() {
+				allTreesHandler = allTreesHandler.WithReturnLimit(1)
+			})
+
+			it("returns only 2 trees", func() {
+				allTreesHandler.ServeHTTP(response, request)
+
+				var trees []internal.FrontendTree
+				err := json.NewDecoder(response.Body).Decode(&trees)
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(len(trees)).To(Equal(1))
+			})
+		})
+
+		context("failure cases", func() {
+			context("when the query parameters cannot be parsed", func() {
+				context("the latitude cannot be parsed", func() {
+					it.Before(func() {
+						request = httptest.NewRequest(
+							"GET",
+							"http://example.com/all-trees?latitude=fail&longitude=-73.84421522&radius=0.5",
+							nil,
+						)
+					})
+
+					it("retuns a 400 error and an error message", func() {
+						allTreesHandler.ServeHTTP(response, request)
+						Expect(response.Code).To(Equal(400))
+
+						message, err := io.ReadAll(response.Body)
+						Expect(err).NotTo(HaveOccurred())
+
+						Expect(string(message)).To(Equal(`failed to convert "latitude"`))
+					})
+				})
+
+				context("the longitude cannot be parsed", func() {
+					it.Before(func() {
+						request = httptest.NewRequest(
+							"GET",
+							"http://example.com/all-trees?latitude=40.72309177&longitude=fail&radius=0.5",
+							nil,
+						)
+					})
+
+					it("retuns a 400 error and an error message", func() {
+						allTreesHandler.ServeHTTP(response, request)
+						Expect(response.Code).To(Equal(400))
+
+						message, err := io.ReadAll(response.Body)
+						Expect(err).NotTo(HaveOccurred())
+
+						Expect(string(message)).To(Equal(`failed to convert "longitude"`))
+					})
+				})
+
+				context("the radius cannot be parsed", func() {
+					it.Before(func() {
+						request = httptest.NewRequest(
+							"GET",
+							"http://example.com/all-trees?latitude=40.72309177&longitude=-73.84421522&radius=fail",
+							nil,
+						)
+					})
+
+					it("retuns a 400 error and an error message", func() {
+						allTreesHandler.ServeHTTP(response, request)
+						Expect(response.Code).To(Equal(400))
+
+						message, err := io.ReadAll(response.Body)
+						Expect(err).NotTo(HaveOccurred())
+
+						Expect(string(message)).To(Equal(`failed to convert "radius"`))
+					})
+				})
+			})
+
+			context("when you make a call with an unsupported method", func() {
+				it.Before(func() {
+					request = httptest.NewRequest(
+						"POST",
+						"http://example.com/all-trees?latitude=40.72309177&longitude=-73.84421522&radius=0.5",
+						nil,
+					)
+				})
+
+				it("returns a 405 error", func() {
+					allTreesHandler.ServeHTTP(response, request)
+					Expect(response.Code).To(Equal(405))
+				})
+			})
 		})
 	})
 
-	context("failure cases", func() {
-		context("when the query parameters cannot be parsed", func() {
-			context("the latitude cannot be parsed", func() {
-				it.Before(func() {
-					request = httptest.NewRequest(
-						"GET",
-						"http://example.com/all-trees?latitude=fail&longitude=-73.84421522&radius=0.5",
-						nil,
-					)
-				})
+	context("RandomTree", func() {
+		var pointerAllTreesHandler *internal.AllTreesHandler
 
-				it("retuns a 400 error and an error message", func() {
-					allTreesHandler.ServeHTTP(response, request)
-					Expect(response.Code).To(Equal(400))
-
-					message, err := io.ReadAll(response.Body)
-					Expect(err).NotTo(HaveOccurred())
-
-					Expect(string(message)).To(Equal(`failed to convert "latitude"`))
-				})
+		it.Before(func() {
+			selectedTreesHandler = internal.NewSelectedTreesHandler().WithTrees([]internal.FrontendTree{
+				{
+					TreeID: 180683,
+				},
 			})
 
-			context("the longitude cannot be parsed", func() {
-				it.Before(func() {
-					request = httptest.NewRequest(
-						"GET",
-						"http://example.com/all-trees?latitude=40.72309177&longitude=fail&radius=0.5",
-						nil,
-					)
-				})
-
-				it("retuns a 400 error and an error message", func() {
-					allTreesHandler.ServeHTTP(response, request)
-					Expect(response.Code).To(Equal(400))
-
-					message, err := io.ReadAll(response.Body)
-					Expect(err).NotTo(HaveOccurred())
-
-					Expect(string(message)).To(Equal(`failed to convert "longitude"`))
-				})
+			allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).WithTrees([]internal.BackendTree{
+				{
+					TreeID: 180683,
+				},
+				{
+					TreeID: 203468,
+				},
 			})
 
-			context("the radius cannot be parsed", func() {
-				it.Before(func() {
-					request = httptest.NewRequest(
-						"GET",
-						"http://example.com/all-trees?latitude=40.72309177&longitude=-73.84421522&radius=fail",
-						nil,
-					)
-				})
-
-				it("retuns a 400 error and an error message", func() {
-					allTreesHandler.ServeHTTP(response, request)
-					Expect(response.Code).To(Equal(400))
-
-					message, err := io.ReadAll(response.Body)
-					Expect(err).NotTo(HaveOccurred())
-
-					Expect(string(message)).To(Equal(`failed to convert "radius"`))
-				})
-			})
+			pointerAllTreesHandler = &allTreesHandler
 		})
 
-		context("when you make a call with an unsupported method", func() {
-			it.Before(func() {
-				request = httptest.NewRequest(
-					"POST",
-					"http://example.com/all-trees?latitude=40.72309177&longitude=-73.84421522&radius=0.5",
-					nil,
-				)
-			})
+		it("returns a random unselcted tree", func() {
+			tree, err := pointerAllTreesHandler.RandomTree()
+			Expect(err).NotTo(HaveOccurred())
 
-			it("returns a 405 error", func() {
-				allTreesHandler.ServeHTTP(response, request)
-				Expect(response.Code).To(Equal(405))
+			Expect(tree).To(Equal(internal.BackendTree{
+				TreeID: 203468,
+			},
+			))
+		})
+
+		context("failure cases", func() {
+			context("when a non-selected tree cannot be found", func() {
+				it.Before(func() {
+					selectedTreesHandler = internal.NewSelectedTreesHandler().WithTrees([]internal.FrontendTree{
+						{
+							TreeID: 180683,
+						},
+					})
+
+					allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).WithTrees([]internal.BackendTree{
+						{
+							TreeID: 180683,
+						},
+					})
+
+					pointerAllTreesHandler = &allTreesHandler
+				})
+
+				it("returns an error", func() {
+					_, err := pointerAllTreesHandler.RandomTree()
+					Expect(err).To(MatchError("could not find random tree what was not selected after 5 tries"))
+				})
 			})
 		})
 	})
