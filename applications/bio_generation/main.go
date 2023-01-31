@@ -291,17 +291,17 @@ func main() {
 			resp, err := c.CreateCompletion(ctx, req)
 			if err != nil {
 				checkPoint, e := os.Create(filepath.Join("checkpoints", "checkpoint-failure.json"))
-				if err != nil {
+				if e != nil {
 					log.Fatal(e)
 				}
 
 				e = json.NewEncoder(checkPoint).Encode(&bioTable)
-				if err != nil {
+				if e != nil {
 					log.Fatal(e)
 				}
 
 				e = checkPoint.Close()
-				if err != nil {
+				if e != nil {
 					log.Fatal(e)
 				}
 
