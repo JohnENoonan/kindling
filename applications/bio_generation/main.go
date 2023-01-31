@@ -276,7 +276,7 @@ func main() {
 			}
 		}
 
-		if counter > 200 {
+		if counter > 500 {
 			fmt.Printf("Went to index %d\n", i-1)
 			break
 		}
