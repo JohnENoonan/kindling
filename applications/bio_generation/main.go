@@ -276,7 +276,7 @@ func main() {
 			}
 		}
 
-		if counter > 1000 {
+		if counter > 200 {
 			fmt.Printf("Went to index %d\n", i-1)
 			break
 		}
@@ -290,6 +290,23 @@ func main() {
 
 			resp, err := c.CreateCompletion(ctx, req)
 			if err != nil {
+				checkPoint, e := os.Create(filepath.Join("checkpoints", "checkpoint-failure.json"))
+				if err != nil {
+					log.Fatal(e)
+				}
+
+				e = json.NewEncoder(checkPoint).Encode(&bioTable)
+				if err != nil {
+					log.Fatal(e)
+				}
+
+				e = checkPoint.Close()
+				if err != nil {
+					log.Fatal(e)
+				}
+
+				fmt.Printf("Failed on iteration %d.\n", i)
+
 				log.Fatal(err)
 			}
 
@@ -297,7 +314,7 @@ func main() {
 
 			bg++
 
-			if bg%25 == 0 {
+			if bg%50 == 0 {
 				fmt.Printf("%d bios generated, currently on the %d identifier of the run. We have reached index %d\n", bg, counter, i)
 			}
 		}
