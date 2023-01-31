@@ -25,7 +25,12 @@ type AllTreesHandler struct {
 	trees                []BackendTree
 	selectedTreesHandler *SelectedTreesHandler
 	returnLimit          int
+	// bios BioTable
 }
+
+// func (bioT BioTable) GetBio(t BackendTree) string {
+//	search and return
+// }
 
 func NewAllTreesHandler(selectedTreesHandler *SelectedTreesHandler) AllTreesHandler {
 	return AllTreesHandler{
@@ -44,15 +49,15 @@ func (a AllTreesHandler) WithReturnLimit(returnLimit int) AllTreesHandler {
 	return a
 }
 
-func (a *AllTreesHandler) RandomTree() (BackendTree, error) {
+func (a *AllTreesHandler) RandomTree() (FrontendTree, error) {
 	rand.Seed(time.Now().Unix())
 	for i := 0; i < 5; i++ {
 		if t := a.trees[rand.Intn(len(a.trees))]; !a.selectedTreesHandler.IsSelected(t.TreeID) {
-			return t, nil
+			return t.MakeFront("Lorem ipsum"), nil
 		}
 	}
 
-	return BackendTree{}, fmt.Errorf("could not find random tree what was not selected after 5 tries")
+	return FrontendTree{}, fmt.Errorf("could not find random tree what was not selected after 5 tries")
 }
 
 func (a AllTreesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -91,7 +96,7 @@ func (a AllTreesHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				if a.selectedTreesHandler.IsSelected(t.TreeID) {
 					continue
 				}
-				treesInRange = append(treesInRange, t.MakeFront())
+				treesInRange = append(treesInRange, t.MakeFront("Lorem ipsum"))
 			}
 		}
 

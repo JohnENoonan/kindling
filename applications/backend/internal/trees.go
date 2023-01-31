@@ -45,7 +45,7 @@ type Features struct {
 	Neighborhood string `json:"neighborhood"`
 }
 
-func (bt BackendTree) MakeFront() FrontendTree {
+func (bt BackendTree) MakeFront(bio string) FrontendTree {
 	return FrontendTree{
 		TreeID:    bt.TreeID,
 		SpeciesID: bt.SpeciesID,
@@ -55,7 +55,7 @@ func (bt BackendTree) MakeFront() FrontendTree {
 		Latitude:  bt.Latitude,
 		Longitude: bt.Longitude,
 		Selected:  false,
-		Bio:       bt.GetBio(),
+		Bio:       bio,
 		Features: Features{
 			Diameter:     bt.Diameter,
 			Introverted:  bt.Introverted,
@@ -68,8 +68,4 @@ func (bt BackendTree) MakeFront() FrontendTree {
 			Neighborhood: bt.Neighborhood,
 		},
 	}
-}
-
-func (bt BackendTree) GetBio() string {
-	return "Lorem ipsum"
 }

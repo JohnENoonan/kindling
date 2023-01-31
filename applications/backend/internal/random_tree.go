@@ -25,7 +25,7 @@ func (rt RandomTreeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = json.NewEncoder(w).Encode(randomTree.MakeFront())
+		err = json.NewEncoder(w).Encode(randomTree)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte(`failed to encode and send JSON`))

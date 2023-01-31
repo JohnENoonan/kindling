@@ -213,8 +213,9 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 			tree, err := pointerAllTreesHandler.RandomTree()
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(tree).To(Equal(internal.BackendTree{
+			Expect(tree).To(Equal(internal.FrontendTree{
 				TreeID: 203468,
+				Bio:    "Lorem ipsum",
 			},
 			))
 		})
