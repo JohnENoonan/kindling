@@ -11,10 +11,11 @@ import (
 )
 
 func main() {
-	var dataFilePath, selectedFilePath string
+	var dataFilePath, selectedFilePath, biosFile string
 	set := flag.NewFlagSet("", flag.ContinueOnError)
 	set.StringVar(&dataFilePath, "data-file-path", "", "path to the data file")
 	set.StringVar(&selectedFilePath, "selected-file-path", "", "path to the selected trees file")
+	set.StringVar(&biosFile, "bios-file", "", "path to the bios file")
 	err := set.Parse(os.Args[1:])
 	if err != nil {
 		log.Fatal(err)
@@ -26,6 +27,10 @@ func main() {
 
 	if selectedFilePath == "" {
 		log.Fatal("--selected-file-path is required")
+	}
+
+	if biosFile == "" {
+		log.Fatal("--bios-file is required")
 	}
 
 	log.Println("Data is loading...")
@@ -76,12 +81,30 @@ func main() {
 		log.Fatal(err)
 	}
 
+	bios, err := os.Open(biosFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var bioTable []internal.BioEntry
+	err = json.NewDecoder(bios).Decode(&bioTable)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Close the file here otherwise it will stay open for the entire life time
+	// of the server
+	err = bios.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	log.Println("Data is loaded!")
 
 	selectedTreesHandler := internal.NewSelectedTreesHandler().WithTrees(selectedTrees).WithDataFile(selectedFilePath)
 	http.Handle("/selected-trees", selectedTreesHandler)
 
-	allTreesHandler := internal.NewAllTreesHandler(selectedTreesHandler).WithTrees(trees)
+	allTreesHandler := internal.NewAllTreesHandler(selectedTreesHandler).WithTrees(trees).WithBios(internal.BioTable{Table: bioTable})
 	http.Handle("/all-trees", allTreesHandler)
 
 	randomTreeHandler := internal.NewRandomTreeHandler(&allTreesHandler)

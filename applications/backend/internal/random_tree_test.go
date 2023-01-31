@@ -36,18 +36,31 @@ func testRandomTree(t *testing.T, context spec.G, it spec.S) {
 				},
 			})
 
-			allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).WithTrees([]internal.BackendTree{
-				{
-					TreeID:    180683,
-					Latitude:  40.72309177,
-					Longitude: -73.84421522,
-				},
-				{
-					TreeID:    203468,
-					Latitude:  40.71760215,
-					Longitude: -73.84915064,
-				},
-			})
+			allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).
+				WithTrees([]internal.BackendTree{
+					{
+						TreeID:    180683,
+						Latitude:  40.72309177,
+						Longitude: -73.84421522,
+					},
+					{
+						TreeID:    203468,
+						SpcCommon: "Pine",
+						Latitude:  40.71760215,
+						Longitude: -73.84915064,
+					},
+				}).
+				WithBios(internal.BioTable{
+					Table: []internal.BioEntry{
+						{
+							Indentifier: internal.Indentifier{
+								SpcCommon: "Pine",
+								Diameter:  -1,
+							},
+							Bios: []string{"Pine for me", "test1", "test2"},
+						},
+					},
+				})
 
 			randomTreeHandler = internal.NewRandomTreeHandler(&allTreesHandler)
 
@@ -68,10 +81,11 @@ func testRandomTree(t *testing.T, context spec.G, it spec.S) {
 
 			Expect(tree).To(Equal(internal.FrontendTree{
 				TreeID:    203468,
+				SpcCommon: "Pine",
 				Latitude:  40.71760215,
 				Longitude: -73.84915064,
 				Selected:  false,
-				Bio:       "Lorem ipsum",
+				Bio:       "Pine for me",
 			}))
 		})
 

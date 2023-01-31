@@ -35,28 +35,49 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 				},
 			})
 
-			allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).WithTrees([]internal.BackendTree{
-				{
-					TreeID:    180683,
-					Latitude:  40.72309177,
-					Longitude: -73.84421522,
-				},
-				{
-					TreeID:    203468,
-					Latitude:  40.71760215,
-					Longitude: -73.84915064,
-				},
-				{
-					TreeID:    203203,
-					Latitude:  40.71760215,
-					Longitude: -73.84915064,
-				},
-				{
-					TreeID:    12345,
-					Latitude:  50.0,
-					Longitude: -75.0,
-				},
-			})
+			allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).
+				WithTrees([]internal.BackendTree{
+					{
+						TreeID:    180683,
+						Latitude:  40.72309177,
+						Longitude: -73.84421522,
+					},
+					{
+						TreeID:    203468,
+						SpcCommon: "Pine",
+						Latitude:  40.71760215,
+						Longitude: -73.84915064,
+					},
+					{
+						TreeID:    203203,
+						SpcCommon: "White Oak",
+						Latitude:  40.71760215,
+						Longitude: -73.84915064,
+					},
+					{
+						TreeID:    12345,
+						Latitude:  50.0,
+						Longitude: -75.0,
+					},
+				}).
+				WithBios(internal.BioTable{
+					Table: []internal.BioEntry{
+						{
+							Indentifier: internal.Indentifier{
+								SpcCommon: "Pine",
+								Diameter:  -1,
+							},
+							Bios: []string{"Pine for me", "test1", "test2"},
+						},
+						{
+							Indentifier: internal.Indentifier{
+								SpcCommon: "White Oak",
+								Diameter:  -1,
+							},
+							Bios: []string{"Oaky like white wine", "test1", "test2"},
+						},
+					},
+				})
 
 			request = httptest.NewRequest(
 				"GET",
@@ -76,17 +97,19 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 			Expect(trees).To(ConsistOf([]internal.FrontendTree{
 				{
 					TreeID:    203468,
+					SpcCommon: "Pine",
 					Latitude:  40.71760215,
 					Longitude: -73.84915064,
 					Selected:  false,
-					Bio:       "Lorem ipsum",
+					Bio:       "Pine for me",
 				},
 				{
 					TreeID:    203203,
+					SpcCommon: "White Oak",
 					Latitude:  40.71760215,
 					Longitude: -73.84915064,
 					Selected:  false,
-					Bio:       "Lorem ipsum",
+					Bio:       "Oaky like white wine",
 				},
 			}))
 		})
@@ -197,14 +220,27 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 				},
 			})
 
-			allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).WithTrees([]internal.BackendTree{
-				{
-					TreeID: 180683,
-				},
-				{
-					TreeID: 203468,
-				},
-			})
+			allTreesHandler = internal.NewAllTreesHandler(selectedTreesHandler).
+				WithTrees([]internal.BackendTree{
+					{
+						TreeID: 180683,
+					},
+					{
+						TreeID:    203468,
+						SpcCommon: "Pine",
+					},
+				}).
+				WithBios(internal.BioTable{
+					Table: []internal.BioEntry{
+						{
+							Indentifier: internal.Indentifier{
+								SpcCommon: "Pine",
+								Diameter:  -1,
+							},
+							Bios: []string{"Pine for me", "test1", "test2"},
+						},
+					},
+				})
 
 			pointerAllTreesHandler = &allTreesHandler
 		})
@@ -214,8 +250,9 @@ func testAllTrees(t *testing.T, context spec.G, it spec.S) {
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(tree).To(Equal(internal.FrontendTree{
-				TreeID: 203468,
-				Bio:    "Lorem ipsum",
+				TreeID:    203468,
+				SpcCommon: "Pine",
+				Bio:       "Pine for me",
 			},
 			))
 		})
