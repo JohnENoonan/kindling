@@ -124,7 +124,6 @@ var (
 		"sturdy",
 		"plump",
 		"broad",
-		"well-endowed",
 		"bodacious",
 		"full-figured",
 	}
@@ -246,7 +245,7 @@ func main() {
 
 	now := time.Now()
 
-	var counter, bg int
+	var counter int
 	for i, b := range bioTable {
 		occurrences := ids[b.Indentifier]
 		iterations := occurrences / average
@@ -258,34 +257,35 @@ func main() {
 			continue
 		}
 
-		if counter%100 == 0 {
-			fmt.Println("Creating checkpoint!")
-			checkPoint, err := os.Create(filepath.Join("checkpoints", fmt.Sprintf("checkpoint%d.json", counter/100)))
-			if err != nil {
-				log.Fatal(err)
-			}
+		// if counter%100 == 0 {
+		// 	fmt.Println("Creating checkpoint!")
+		// 	checkPoint, err := os.Create(filepath.Join("checkpoints", fmt.Sprintf("checkpoint%d.json", counter/100)))
+		// 	if err != nil {
+		// 		log.Fatal(err)
+		// 	}
+		//
+		// 	err = json.NewEncoder(checkPoint).Encode(&bioTable)
+		// 	if err != nil {
+		// 		log.Fatal(err)
+		// 	}
+		//
+		// 	err = checkPoint.Close()
+		// 	if err != nil {
+		// 		log.Fatal(err)
+		// 	}
+		// }
 
-			err = json.NewEncoder(checkPoint).Encode(&bioTable)
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			err = checkPoint.Close()
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-
-		if counter > 500 {
+		if counter > 100 {
 			fmt.Printf("Went to index %d\n", i-1)
 			break
 		}
 
 		for j := 0; j < (iterations - len(b.Bios)); j++ {
+			prompt := buildPrompt(b.Indentifier)
 			req := gogpt.CompletionRequest{
 				Model:     gogpt.GPT3TextDavinci003,
 				MaxTokens: 256,
-				Prompt:    buildPrompt(b.Indentifier),
+				Prompt:    prompt,
 			}
 
 			resp, err := c.CreateCompletion(ctx, req)
@@ -309,16 +309,16 @@ func main() {
 
 				log.Fatal(err)
 			}
+			bio := strings.TrimSpace(resp.Choices[0].Text)
+			bioTable[i].Bios = append(bioTable[i].Bios, bio)
 
-			bioTable[i].Bios = append(bioTable[i].Bios, strings.TrimSpace(resp.Choices[0].Text))
+			counter++
 
-			bg++
-
-			if bg%50 == 0 {
-				fmt.Printf("%d bios generated, currently on the %d identifier of the run. We have reached index %d\n", bg, counter, i)
+			if counter%10 == 0 {
+				fmt.Printf("Counter: %d\n\n", counter)
 			}
+			fmt.Printf("%s\n\n", bio)
 		}
-		counter++
 	}
 
 	output, err := os.Create(outputFile)
@@ -332,7 +332,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("There where %d bios generated in %s\n", bg, time.Since(now).String())
+	fmt.Printf("There where %d bios generated in %s\n", counter, time.Since(now).String())
 
 	fmt.Println("Deleting checkpoints directory!")
 	err = os.RemoveAll("checkpoints")
@@ -376,9 +376,9 @@ func buildPrompt(id Indentifier) string {
 		prompt += " a"
 	}
 
-	prompt += " " + id.SpcCommon
+	prompt += fmt.Sprintf(" %s tree", id.SpcCommon)
 
-	rand.Seed(time.Now().Unix())
+	rand.Seed(time.Now().UnixNano())
 
 	var attributes []string
 
