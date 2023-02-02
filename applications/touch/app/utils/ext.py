@@ -1,10 +1,5 @@
 """
-
-	Utils 
-	
-	Stateless, misc helper functions, consolidated
-
-
+	Util helper functions
 """
 
 import uuid
