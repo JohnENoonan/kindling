@@ -35,6 +35,9 @@ class ext:
 		alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)] 
 		return sorted(l, key=alphanum_key)
 
+	def CleanOpName(self, name):
+		return name.replace('.','_').replace('-','_').replace(' ','_').replace('&','_').replace('@','_')
+
 	def UUID( self ):
 		return str( uuid.uuid1() )
 
