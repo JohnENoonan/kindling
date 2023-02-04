@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 
 headers = {
 	'Content-Type': 'application/x-www-form-urlencoded',
@@ -53,9 +54,11 @@ class DataExt:
 		rad = self.raduisOp[0].eval()
 		lat = self.pinpointOp[1].eval()
 		lon = self.pinpointOp[0].eval()
+		# start = time.time()
 		response = self.QueryArea(lat, lon, rad)
 		if response is not None:
 			self.processResponse(response)
+			# op.log.Debug("Call took {}".format(time.time() - start))
 			return True
 		else:
 			op.log.Error(f"No trees returned from query to {lat}, {lon} with radius {rad}")
