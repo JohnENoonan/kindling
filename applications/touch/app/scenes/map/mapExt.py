@@ -10,3 +10,4 @@ class MapExt:
 		self.area_slider_op.par.Value = .5
 		self.zoom_slider_op.par.Value = 0.0
 		op.touch.ResetPan()
+		op.touch.ResetPin()
