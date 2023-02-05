@@ -34,8 +34,10 @@ area_slider = op("/app/scene_app/MAP/area_slider_geo")
 zoom_slider_geo = op("/app/scene_app/MAP/zoom_slider_geo/slider")
 zoom_slider = op("/app/scene_app/MAP/zoom_slider_geo")
 
-map_submit_geo = op("/app/scene_app/MAP/submit_geo/null1")
+match_confirm_geo = op("/app/scene_app/MATCHING/match_dialogue_geo/match_geo/null1")
+match_decline_geo = op("/app/scene_app/MATCHING/match_dialogue_geo/pass_geo/null1")
 
+map_submit_geo = op("/app/scene_app/MAP/submit_geo/null1")
 map_geo = op("/app/scene_app/MAP/map_geo/null1")
 map_shader = op("/app/scene_app/MAP/map_shader")
 # map data is a constant used to write out
@@ -74,6 +76,16 @@ def onEvents(renderPickDat, events, eventsPrev):
 		# submit map
 		elif event.selectedOp == map_submit_geo and event.selectEnd:
 			op.controller.SearchArea()
+
+		# matching buttons
+		elif event.selectedOp == match_confirm_geo and event.selectEnd:
+			op.match.ext.matchExt.ConfirmMatch()
+		elif event.selectedOp == match_decline_geo and event.selectEnd:
+			op.match.ext.matchExt.DeclineMatch()
+			
+
+
+
 
 
 
