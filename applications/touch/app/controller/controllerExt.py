@@ -22,6 +22,7 @@ class ControllerExt:
 		"""
 		self.user_trigger.par.triggerpulse.pulse()
 		op.log.Info("Start new user session {0:.0f}".format(self.session["user_id"].eval()))
+		op.match.ext.matchExt.Reset()
 
 	def StartNewSession(self):
 		"""
@@ -36,6 +37,8 @@ class ControllerExt:
 		Set all of the default values on a new session starting for this user
 		"""
 		me.store("starttime", datetime.now())
+		me.unstore("tree_id")
+		me.unstore("connected")
 
 	def FinishSession(self):
 		"""
@@ -43,8 +46,9 @@ class ControllerExt:
 		"""
 		op.scene_manager.TransitionTo("app", "ATTRACT")
 		endtime = datetime.now()
-		# op.analytics.AddSession(self.session["user_id"].eval(), me.fetch("starttime", endtime), endtime, 
-		# 						me.fetch("created_painting", 0), me.fetch("viewed_gallery", 0), me.fetch("render_name", ''))
+		op.analytics.AddSession(self.session["user_id"].eval(), me.fetch("starttime", endtime), endtime, 
+								me.fetch("created_painting", 0), me.fetch("connected", 0), me.fetch("tree_id", ''))
+
 
 	def Reset(self):
 		"""
@@ -72,3 +76,8 @@ class ControllerExt:
 			# there are no trees there, raise an error and try again
 			pass
 
+
+	def Match(self, tree_id):
+		# The user has matched with a tree, we need to play the match animation and then move to the congrats screen
+		me.store("tree_id", tree_id)
+		op.log.Verbose(f"Made final match with {tree_id}")

@@ -1,6 +1,6 @@
 from random import random, randint
 
-SWIPE_UP_TIME = 3
+SWIPE_UP_TIME = 1.5
 
 class MatchExt:
 
@@ -17,11 +17,16 @@ class MatchExt:
 
 	def ClearMatches(self):
 		self.matches_table.clear()
-		self.matches_table.appendRow(["local_id", "tree_id", "match_time"])
+		self.matches_table.appendRow(["local_id", "swipe_up", "match_time"])
 
-	def addToMatches(self, local_id, tree_id, time_to_match=SWIPE_UP_TIME):
+	def Reset(self):
+		self.ClearMatches()
+		self.ShowMatchDialogue(0)
+		me.unstore("match_local_id")
+
+	def addToMatches(self, local_id, swipe_up, time_to_match=SWIPE_UP_TIME):
 		# add this tree to the match list
-		self.matches_table.appendRow([local_id, tree_id, time_to_match + self.match_timer_op["timer_seconds"]])
+		self.matches_table.appendRow([local_id, swipe_up, time_to_match + self.match_timer_op["timer_seconds"]])
 
 	def SwipeRight(self):
 		# randomly decide if and when a match will happen
@@ -29,10 +34,11 @@ class MatchExt:
 			time_to_match = randint(int(op.env.Get("MATCH_MIN_DUR")), int(op.env.Get("MATCH_MAX_DUR")))
 			op.log.Verbose(f"Matched on right swipe with {self.current_tree_op[1, 'local_id']}, applies in {time_to_match} seconds")
 			self.addToMatches(	self.current_tree_op[1, 'local_id'], 
-								self.current_tree_op[1, 'tree_id'], 
+								0, 
 								time_to_match)
 
 	def ShowMatchDialogue(self, show):
+		op.log.Debug("show show_dialogue = {}".format(show))
 		# set whether to show the matching dialogue
 		self.show_dialogue_op.par.value0.val = show
 		# pause timer on other matches
@@ -40,26 +46,38 @@ class MatchExt:
 
 	def SwipeUp(self):
 		# on swipe up we match immediately 
-		self.addToMatches(self.current_tree_op[1, 'local_id'], self.current_tree_op[1, 'tree_id'])
+		self.addToMatches(self.current_tree_op[1, 'local_id'], 1)
 		op.log.Verbose("Match on swipe up")
 
 	def HandlePotentialMatch(self, match_id):
-
+		"""	called when a match has happened
+			if the user right swiped they need to confirm the match
+			if they swiped up skip and go to next scene
+		"""
 		local_id = self.matches_table[match_id, "local_id"]
-		op.log.Debug("match_id = {}, local_id = {}".format(match_id, local_id))
-		name = self.all_trees[local_id, "name"]
-		neighborhood = self.all_trees[local_id, "neighborhood"]
-		op("match_dialogue_geo/name").text = f"{name} from {neighborhood} "
+		# store the prospective matches local id
+		me.store("match_local_id", int(local_id))
 
-		# show confirm dialogue
-		self.ShowMatchDialogue(1)
+		if not int(self.matches_table[match_id, "swipe_up"].val):
+			op.log.Debug("Swiped right")
+			name = self.all_trees[local_id, "name"]
+			neighborhood = self.all_trees[local_id, "neighborhood"]
+			op("match_dialogue_geo/name").text = f"{name} from {neighborhood} "
+			# show confirm dialogue
+			self.ShowMatchDialogue(1)
+		else:
+			op.log.Debug("swiped up")
+			op.controller.Match(self.all_trees[local_id, "tree_id"])
+
 
 	def ConfirmMatch(self):
 		op.log.Verbose("Confirm match")
+		op.controller.Match(self.all_trees[me.fetch("match_local_id"), "tree_id"])
 		self.ShowMatchDialogue(0)
 
 
 	def DeclineMatch(self):
 		op.log.Verbose("Decline match")
 		self.ShowMatchDialogue(0)
-		pass
+		# unstore the potential local id, this tree isn't it
+		me.unstore("match_local_id")
