@@ -17,7 +17,8 @@ class ext:
 		self.Subscenes = {
 
 			'app': {
-				'MAP': [ 'AREA', 'CONNECTED' ]
+				'MAP': [ 'TUTORIAL', 'AREA', 'CONNECTED' ],
+				'MATCHING': ['TUTORIAL', 'SELECTION', 'MATCHED']
 			}
 		}
 		
@@ -38,8 +39,14 @@ class ext:
 				},
 				'subscenes': {
 					'MAP': {
-						'AREA': self.nodes['app']['subscenes'].par.value0,
-						'CONNECTED': self.nodes['app']['subscenes'].par.value1
+						'TUTORIAL': self.nodes['app']['subscenes'].par.value0,
+						'AREA': self.nodes['app']['subscenes'].par.value1,
+						'CONNECTED': self.nodes['app']['subscenes'].par.value2
+					},
+					'MATCHING': {
+						'TUTORIAL': self.nodes['app']['subscenes'].par.value3,
+						'SELECTION': self.nodes['app']['subscenes'].par.value4,
+						'MATCHED': self.nodes['app']['subscenes'].par.value5
 					}
 				}
 			}

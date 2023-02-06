@@ -30,7 +30,7 @@ class ControllerExt:
 		to the interactive scene
 		"""
 		op.controller.NewUser()
-		op.scene_manager.TransitionToSub('app', 'MAP', 'AREA')
+		op.scene_manager.TransitionToSub('app', 'MAP', 'TUTORIAL')
 
 	def initializeUser(self):
 		"""
@@ -71,7 +71,7 @@ class ControllerExt:
 		# query the server
 		if op.data.QueryCurrentArea():
 			# there are trees to match with, move on to the matching scene
-			op.scene_manager.TransitionTo('app', 'MATCHING')
+			op.scene_manager.TransitionToSub('app', 'MATCHING', 'TUTORIAL')
 		else:
 			# there are no trees there, raise an error and try again
 			pass
@@ -81,3 +81,4 @@ class ControllerExt:
 		# The user has matched with a tree, we need to play the match animation and then move to the congrats screen
 		me.store("tree_id", tree_id)
 		op.log.Verbose(f"Made final match with {tree_id}")
+		op.scene_manager.TransitionToSub('app', 'MATCHING', 'MATCHED')
