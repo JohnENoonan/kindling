@@ -68,17 +68,33 @@ class ControllerExt:
 
 	####### App logic #######
 	def SearchArea(self):
+		"""
+		Search the currently set area
+		Returns true if some trees are found, false otherwise
+		If there are trees move on to matching
+		"""
 		# query the server
 		if op.data.QueryCurrentArea():
 			# there are trees to match with, move on to the matching scene
 			op.scene_manager.TransitionToSub('app', 'MATCHING', 'TUTORIAL')
+			return True
 		else:
 			# there are no trees there, raise an error and try again
 			pass
 
 
 	def Match(self, tree_id):
+		"""
+		tree_id: the id of the tree the user matched with
+		"""
 		# The user has matched with a tree, we need to play the match animation and then move to the congrats screen
 		me.store("tree_id", tree_id)
 		op.log.Verbose(f"Made final match with {tree_id}")
 		op.scene_manager.TransitionToSub('app', 'MATCHING', 'MATCHED')
+
+	def ViewCity(self):
+		"""
+		After learning more about the tree, see the tree on the map and then see the entire city
+		"""
+
+		op.scene_manager.TransitionToSub('app', 'MAP', 'CONNECTED')
