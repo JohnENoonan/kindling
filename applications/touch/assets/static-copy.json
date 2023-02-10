@@ -16,5 +16,7 @@
 
 	"CONFIRM-CTA": "likes you back!",
 	"CONFIRM-ACCEPT": "match",
-	"CONFIRM-DECLINE": "pass"
+	"CONFIRM-DECLINE": "pass",
+
+	"MATCHED-SCAN": "Scan here to find me in real life!"
 }
