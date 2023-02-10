@@ -23,6 +23,7 @@ class ControllerExt:
 		self.user_trigger.par.triggerpulse.pulse()
 		op.log.Info("Start new user session {0:.0f}".format(self.session["user_id"].eval()))
 		op.match.ext.matchExt.Reset()
+		op.map.ext.mapExt.ResetMap()
 
 	def StartNewSession(self):
 		"""
