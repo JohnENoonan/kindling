@@ -7,6 +7,9 @@ The TouchDesigner implementation of the interactive experience
 * [Install Touchdesigner 2022.31030](https://derivative.ca/release/202231030/67006)
 * Apply a license
 
+### Python
+Make sure to have a python installation on the machine. Run `pip install pyqrcode` and then set *Edit->Preferences* "External Python to Search Path" to `C:/**python_version_path**/Lib/site-packages`.
+
 ### Audio
 TODO
 

@@ -13,6 +13,7 @@ class MatchExt:
 		self.matches_table = op("matches")
 		self.match_timer_op = op("match_timer")
 		self.show_dialogue_op = op("match_dialogue_geo/show_dialogue")
+		self.qr_op = op("QRMaker")
 		self.ClearMatches()
 
 	def ClearMatches(self):
@@ -39,6 +40,10 @@ class MatchExt:
 								time_to_match)
 
 	def ShowMatchDialogue(self, show):
+		"""
+		Show or the match accept/reject buttons
+		if the dialogue is showing then pause the matching timer
+		"""
 		op.log.Debug("show show_dialogue = {}".format(show))
 		# set whether to show the matching dialogue
 		self.show_dialogue_op.par.value0.val = show
@@ -82,3 +87,14 @@ class MatchExt:
 		self.ShowMatchDialogue(0)
 		# unstore the potential local id, this tree isn't it
 		me.unstore("match_local_id")
+
+
+	def CreateQR(self):
+		"""
+		Update the QR code to the url for the matched lat and long. 
+		This must be called after a match ahs been confirmed
+		"""
+		lat = self.all_trees[me.fetch("match_local_id"), "latitude"]
+		lon = self.all_trees[me.fetch("match_local_id"), "longitude"]
+		self.qr_op.par.Data = f'http://maps.google.com/maps?q=loc:{lat},{lon}'
+		self.qr_op.par.Make.pulse()
