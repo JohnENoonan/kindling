@@ -20,6 +20,7 @@ class MatchExt:
 		self.matches_table.appendRow(["local_id", "swipe_up", "match_time"])
 
 	def Reset(self):
+		op.log.Debug("Reset matching")
 		self.ClearMatches()
 		self.ShowMatchDialogue(0)
 		me.unstore("match_local_id")
