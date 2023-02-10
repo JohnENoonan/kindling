@@ -8,6 +8,7 @@ analytics/*
 sketches
 /data/2015*
 qr/
+applications/backend/*.exe
 
 
 **/.cache/**/*
