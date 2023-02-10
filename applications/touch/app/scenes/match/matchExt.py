@@ -5,18 +5,22 @@ SWIPE_UP_TIME = 1.5
 class MatchExt:
 
 	def __init__(self, ownerComp):
-		self.ownerComp = ownerComp
-		self.index_op = op("index")
-		self.current_tree_op = op("current_tree")
-		self.all_trees = op("trees")
-		self.random_op = op("random_match")
-		self.matches_table = op("matches")
+		self.current_tree_op = op("current_tree") # the current tree being examined
+		self.all_trees = op("trees") # table of all available trees
+		self.matches_table = op("matches") # table storing the matches
 		self.match_timer_op = op("match_timer")
 		self.show_dialogue_op = op("match_dialogue_geo/show_dialogue")
-		self.qr_op = op("QRMaker")
-		self.ClearMatches()
+		# ops used for the matched tree
+		self.qr_op = op("match_bio/QRMaker")
+		self.match_bio_table = op("match_bio/bio_edit")
+		self.match_bio_table.clear()
+		self.match_bio_table.appendRow(['spc_latin', 'spc_common', 'name', 'bio', 'neighborhood'])
+		self.Reset()
 
 	def ClearMatches(self):
+		"""
+		Clear all the possible matches
+		"""
 		self.matches_table.clear()
 		self.matches_table.appendRow(["local_id", "swipe_up", "match_time"])
 
@@ -28,6 +32,7 @@ class MatchExt:
 
 	def addToMatches(self, local_id, swipe_up, time_to_match=SWIPE_UP_TIME):
 		# add this tree to the match list
+		# schema = local id and the time relative to the match timer that this match should apply
 		self.matches_table.appendRow([local_id, swipe_up, time_to_match + self.match_timer_op["timer_seconds"]])
 
 	def SwipeRight(self):
@@ -77,24 +82,42 @@ class MatchExt:
 
 
 	def ConfirmMatch(self):
+		"""
+		The user has confirmed that the local match is the one for them :) 
+		hide dialogue and go to the matched scene
+		"""
 		op.log.Verbose("Confirm match")
 		op.controller.Match(self.all_trees[me.fetch("match_local_id"), "tree_id"])
 		self.ShowMatchDialogue(0)
 
 
 	def DeclineMatch(self):
+		"""
+		The user has chosen to keep looking, hide the dialogue and remove the local match id
+		"""
 		op.log.Verbose("Decline match")
 		self.ShowMatchDialogue(0)
 		# unstore the potential local id, this tree isn't it
 		me.unstore("match_local_id")
 
+	def UpdateMatchedBio(self):
+		local_id = me.fetch("match_local_id")
+		self.CreateQR(local_id)
+		self.match_bio_table.clear(keepFirstRow=True)
+		self.match_bio_table.appendRow([	self.all_trees[local_id, "spc_latin"],
+											self.all_trees[local_id, "spc_common"],
+											self.all_trees[local_id, "name"],
+											self.all_trees[local_id, "bio"],
+											self.all_trees[local_id, "neighborhood"]
+		])
 
-	def CreateQR(self):
+
+	def CreateQR(self, local_id):
 		"""
 		Update the QR code to the url for the matched lat and long. 
-		This must be called after a match ahs been confirmed
+		local_id: local id of the tree to update to
 		"""
-		lat = self.all_trees[me.fetch("match_local_id"), "latitude"]
-		lon = self.all_trees[me.fetch("match_local_id"), "longitude"]
+		lat = self.all_trees[local_id, "latitude"]
+		lon = self.all_trees[local_id, "longitude"]
 		self.qr_op.par.Data = f'http://maps.google.com/maps?q=loc:{lat},{lon}'
 		self.qr_op.par.Make.pulse()
