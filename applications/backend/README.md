@@ -24,7 +24,7 @@ curl localhost:8090/random-tree
 
 ### Add a tree to the selected list
 ```
-curl -X POST localhost:8090/selected-trees -d '{#front end tree object}'
+curl -X POST localhost:8090/selected-trees -d '{front end tree object}'
 ```
 
 ### Get a list of all selected trees so far
