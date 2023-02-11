@@ -75,14 +75,7 @@ class ControllerExt:
 		If there are trees move on to matching
 		"""
 		# query the server
-		if op.data.QueryCurrentArea():
-			# there are trees to match with, move on to the matching scene
-			op.scene_manager.TransitionToSub('app', 'MATCHING', 'TUTORIAL')
-			return True
-		else:
-			# there are no trees there, raise an error and try again
-			pass
-
+		op.data.QueryCurrentArea()
 
 	def Match(self, tree_id):
 		"""
