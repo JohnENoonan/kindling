@@ -48,7 +48,7 @@ class ControllerExt:
 		op.scene_manager.TransitionTo("app", "ATTRACT")
 		endtime = datetime.now()
 		op.analytics.AddSession(self.session["user_id"].eval(), me.fetch("starttime", endtime), endtime, 
-								me.fetch("created_painting", 0), me.fetch("connected", 0), me.fetch("tree_id", ''))
+								me.fetch("connected", 0), me.fetch("tree_id", ''))
 
 
 	def Reset(self):

@@ -132,3 +132,6 @@ class ext:
 		for scene in self.Scenes["app"]:
 			if self.nodes["app"]["scenes"][scene] == 1:
 				return scene
+
+	def IsMapArea(self):
+		return self.chops['app']['subscenes']['MAP']['AREA'] * self.chops['app']['scenes']['MAP'] == 1

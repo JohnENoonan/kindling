@@ -25,10 +25,10 @@ float frameAspect = uRes.x / uRes.y;
 float texAspect = uTD2DInfos[0].res.z / uTD2DInfos[0].res.w; // aspect ratio of the map
 float texFrameRatio = texAspect / frameAspect;
 
-float wave(vec2 uv, float speed, float scl) {
+float wave(vec2 uv, float speed, float scl, float waveWidthFact) {
 	// create repeated waves. Takes uv. Tiling is controled by scl
 	float curve = 0.4 * sin(9.25 * uv.x + (uTime * speed)) ;
-	float waveWidth = .03 * clamp(uZoom, 0.0, 1.0);
+	float waveWidth = waveWidthFact * clamp(uZoom, 0.0, 1.0);
 	float waveSoftness = waveWidth * .1;
 	float lineAShape = clamp(distance(curve + scl * mod(uv.y, 1.0/scl), 0.5) * 1.0, 0.0, 1.0);
 	return 1.0-smoothstep(waveWidth - waveSoftness, waveWidth + waveSoftness,abs(lineAShape));
@@ -63,7 +63,7 @@ void main()
 
 	// make ocean
 	vec3 ocean = vec3(0.063, 0.333, 0.435);
-	vec4 color = vec4(ocean * (1.0 - .1 * wave(mapUV, .4, 40.0)), 1.0);
+	vec4 color = vec4(ocean * (1.0 - .1 * wave(mapUV, .4, 40.0, .1)), 1.0);
 	
 	// create roads
 	vec4 mapTex = textureBicubic(sTD2DInputs[0], mapUV);

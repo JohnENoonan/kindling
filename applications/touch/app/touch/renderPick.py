@@ -37,6 +37,8 @@ zoom_slider = op("/app/scene_app/MAP/zoom_slider_geo")
 match_confirm_geo = op("/app/scene_app/MATCHING/match_dialogue_geo/match_geo/null1")
 match_decline_geo = op("/app/scene_app/MATCHING/match_dialogue_geo/pass_geo/null1")
 
+match_next_geo = op("/app/scene_app/MATCHING/match_bio/next_geo/null1")
+
 map_submit_geo = op("/app/scene_app/MAP/submit_geo/null1")
 map_geo = op("/app/scene_app/MAP/map_geo/null1")
 map_shader = op("/app/scene_app/MAP/map_shader")
@@ -54,6 +56,8 @@ def setCurrent(current):
 def onEvents(renderPickDat, events, eventsPrev):
 
 	for event, eventPrev in zip(events, eventsPrev):
+
+		
 		# drag map
 		if event.selectedOp == map_geo:
 			current_uv = event.texture
@@ -67,15 +71,16 @@ def onEvents(renderPickDat, events, eventsPrev):
 				me.store("prev_uv", current_uv)
 			if event.selectEnd or event.pickOp != map_geo:
 				setDelta((0.0, 0.0))
-		# drag area slider
-		elif event.selectedOp == area_slider_geo and event.pickOp == area_slider_geo and event.select:
-			area_slider.par.Value = event.texture[0]
-		# drag zoom slider
-		elif event.selectedOp == zoom_slider_geo and event.pickOp == zoom_slider_geo and event.select:
-			zoom_slider.par.Value = event.texture[0]
-		# submit map
-		elif event.selectedOp == map_submit_geo and event.selectEnd:
-			op.controller.SearchArea()
+		elif op.scene_manager.IsMapArea():
+			# drag area slider
+			if event.selectedOp == area_slider_geo and event.pickOp == area_slider_geo and event.select:
+				area_slider.par.Value = event.texture[0]
+			# drag zoom slider
+			elif event.selectedOp == zoom_slider_geo and event.pickOp == zoom_slider_geo and event.select:
+				zoom_slider.par.Value = event.texture[0]
+			# submit map
+			elif event.selectedOp == map_submit_geo and event.selectEnd:
+				op.controller.SearchArea()
 
 		# matching buttons
 		elif event.selectedOp == match_confirm_geo and event.selectEnd:
@@ -83,12 +88,6 @@ def onEvents(renderPickDat, events, eventsPrev):
 		elif event.selectedOp == match_decline_geo and event.selectEnd:
 			op.match.ext.matchExt.DeclineMatch()
 			
-
-
-
-
-
-
-	return
-
-	
+		# finish looking at bio
+		elif event.selectedOp == match_next_geo and event.selectEnd:
+			op.controller.ViewCity()

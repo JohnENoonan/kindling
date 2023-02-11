@@ -15,7 +15,7 @@ class MatchExt:
 		self.match_bio_table = op("match_bio/bio_edit")
 		self.match_bio_table.clear()
 		self.match_bio_table.appendRow(['spc_latin', 'spc_common', 'name', 'bio', 'neighborhood'])
-		self.Reset()
+		# self.Reset()
 
 	def ClearMatches(self):
 		"""
@@ -68,6 +68,7 @@ class MatchExt:
 		local_id = self.matches_table[match_id, "local_id"]
 		# store the prospective matches local id
 		me.store("match_local_id", int(local_id))
+		op.log.Debug(f"store local_id {local_id}")
 
 		if not int(self.matches_table[match_id, "swipe_up"].val):
 			op.log.Debug("Swiped right")

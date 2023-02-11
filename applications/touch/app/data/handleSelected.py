@@ -15,6 +15,7 @@ def onDisconnect(webClientDAT, id):
 def onResponse(webClientDAT, statusCode, headerDict, data, id):
 	res = json.loads(data.decode("utf-8"))
 	if res is not None:
-		
-	return
+		op.data.ProcessSelectedResponse(res)
+	else:
+		op.log.Error("Selected trees has no data. do nothing")
 	
