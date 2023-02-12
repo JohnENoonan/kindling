@@ -13,7 +13,13 @@ dataLight		14	1.0	1.0
 dataLightSmall		13	0.5	1.0	
 attractTitleProject		60	0.0	1.0
 attractTitleSub		40	0.0	1.0
-buttonMed		14	0.0	1.0
-profileName		60	0.0	1.0
-profileBio		24	0.0	1.0
-profileSubHeader		30	0.0	1.0
+
+buttonMed	assets/fonts/montserrat/Montserrat-Medium.ttf	18	0.0	0.0
+profileName	assets/fonts/MADEMountain/MADEMountain-Regular.otf	60	2.0	1.0
+profileBio	assets/fonts/montserrat/Montserrat-Medium.ttf	19	0.0	5.0
+profileSubHeader	assets/fonts/montserrat/Montserrat-Medium.ttf	22.5	0.0	0.0
+profileLatinName	assets/fonts/montserrat/Montserrat-MediumItalic.ttf	22.5	0.0	0.0
+
+matchSubHeader	assets/fonts/montserrat/Montserrat-Medium.ttf	24	0.0	0.0
+matchLatinName	assets/fonts/montserrat/Montserrat-MediumItalic.ttf	24	0.0	0.0
+matchBio	assets/fonts/montserrat/Montserrat-Medium.ttf	22.5	0.0	0.0
