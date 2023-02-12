@@ -15,7 +15,9 @@ class MatchExt:
 		self.match_bio_table = op("match_bio/bio_edit")
 		self.match_bio_table.clear()
 		self.match_bio_table.appendRow(['spc_latin', 'spc_common', 'name', 'bio', 'neighborhood'])
-		# self.Reset()
+		
+		self.cache_op = op("profile1/cache1")
+		self.cache_select_op = op("match_bio/cacheselect1")
 
 	def ClearMatches(self):
 		"""
@@ -28,12 +30,21 @@ class MatchExt:
 		op.log.Debug("Reset matching")
 		self.ClearMatches()
 		self.ShowMatchDialogue(0)
+		self.cache_op.par.reset.pulse()
+		self.cache_select_op.par.index = 0
 		me.unstore("match_local_id")
 
 	def addToMatches(self, local_id, swipe_up, time_to_match=SWIPE_UP_TIME):
 		# add this tree to the match list
 		# schema = local id and the time relative to the match timer that this match should apply
 		self.matches_table.appendRow([local_id, swipe_up, time_to_match + self.match_timer_op["timer_seconds"]])
+
+	def cacheTreeImage(self):
+		"""
+		Store the current index's tree image in the cache op
+		"""
+		self.cache_op.par.replaceindex = - (self.matches_table.numRows - 1)
+		self.cache_op.par.replace.pulse()
 
 	def SwipeRight(self):
 		# randomly decide if and when a match will happen
@@ -43,13 +54,14 @@ class MatchExt:
 			self.addToMatches(	self.current_tree_op[1, 'local_id'], 
 								0, 
 								time_to_match)
+			self.cacheTreeImage()
+
 
 	def ShowMatchDialogue(self, show):
 		"""
 		Show or the match accept/reject buttons
 		if the dialogue is showing then pause the matching timer
 		"""
-		op.log.Debug("show show_dialogue = {}".format(show))
 		# set whether to show the matching dialogue
 		self.show_dialogue_op.par.value0.val = show
 		# pause timer on other matches
@@ -59,6 +71,7 @@ class MatchExt:
 		# on swipe up we match immediately 
 		self.addToMatches(self.current_tree_op[1, 'local_id'], 1)
 		op.log.Verbose("Match on swipe up")
+		self.cacheTreeImage()
 
 	def HandlePotentialMatch(self, match_id):
 		"""	called when a match has happened
@@ -70,13 +83,16 @@ class MatchExt:
 		me.store("match_local_id", int(local_id))
 		op.log.Debug(f"store local_id {local_id}")
 
+		# handle a successful right swipe
 		if not int(self.matches_table[match_id, "swipe_up"].val):
 			op.log.Debug("Swiped right")
 			name = self.all_trees[local_id, "name"]
 			neighborhood = self.all_trees[local_id, "neighborhood"]
 			op("match_dialogue_geo/name").text = f"{name} from {neighborhood} "
-			# show confirm dialogue
-			self.ShowMatchDialogue(1)
+			# show confirm dialogue if we don't already have a match
+			if op("subscene_raw")["SELECTION"]:
+				self.ShowMatchDialogue(1)
+		# handle swipe up
 		else:
 			op.log.Debug("swiped up")
 			op.controller.Match(self.all_trees[local_id, "tree_id"])
@@ -103,6 +119,8 @@ class MatchExt:
 
 	def UpdateMatchedBio(self):
 		local_id = me.fetch("match_local_id")
+		cell = -1 * self.matches_table.findCell(str(local_id), cols=['local_id']).row + 1
+		self.cache_select_op.par.index = cell
 		self.CreateQR(local_id)
 		self.match_bio_table.clear(keepFirstRow=True)
 		self.match_bio_table.appendRow([	self.all_trees[local_id, "spc_latin"],
