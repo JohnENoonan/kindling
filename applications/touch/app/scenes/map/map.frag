@@ -62,7 +62,7 @@ void main()
 
 
 	// make ocean
-	vec3 ocean = vec3(0.063, 0.333, 0.435);
+	vec3 ocean = LIGHTBLUE.rgb;
 	vec4 color = vec4(ocean * (1.0 - .1 * wave(mapUV, .4, 40.0, .1)), 1.0);
 	
 	// create roads
