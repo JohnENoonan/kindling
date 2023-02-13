@@ -18,6 +18,7 @@ vec2 uMousePan = uMouseData.xy; // values used to pan the map
 
 vec2 uPinPos = uArea.xy;
 float uAreaRad = uArea.z;
+float uAreaAlpha = uArea.w; // alpha value for rendering the area circle
 
 // aspect ratio
 vec2 uOutAspect = uRes / uRes.y;
@@ -63,7 +64,7 @@ void main()
 
 	// make ocean
 	vec3 ocean = LIGHTBLUE.rgb;
-	vec4 color = vec4(ocean * (1.0 - .1 * wave(mapUV, .4, 40.0, .1)), 1.0);
+	vec4 color = vec4(ocean * (1.0 - .1 * wave(uv, .4, 40.0, .1)), 1.0); // use mapUV to move the waves as well with mouse
 	
 	// create roads
 	vec4 mapTex = textureBicubic(sTD2DInputs[0], mapUV);
@@ -73,7 +74,7 @@ void main()
 
 	// draw pinned area
 	float areaCircle = sdCircle(texCorrect * (mapUV - pinuv.yx), uAreaRad / MAP_MAX_DIST);
-	float circleAlpha = .7 * float(areaCircle < 0.0);
+	float circleAlpha = .7 * float(areaCircle < 0.0) * uAreaAlpha;
 	vec3 circleColor = vec3(1.0, 0.0, 1.0);
 	color.rgb = circleColor * circleAlpha + color.rgb * (1.0 - circleAlpha);
 

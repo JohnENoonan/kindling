@@ -22,17 +22,6 @@ class DataExt:
 		self.tree_table = op("trees_edit")
 		self.selected_table = op("selected_edit")
 
-
-	def QueryArea(self, lat, lon, rad):
-		params = {
-			'latitude': lat,
-			'longitude': lon,
-			'radius': rad,
-		}
-		op.log.Verbose("Query {} with {}".format(self.areaUrl, params))
-		response = requests.get(self.areaUrl, params=params)
-		return response.json()
-
 	def convertAPIToTable(self, data, table):
 		keys = list(data[0].keys())
 		keys.remove("features")

@@ -6,6 +6,8 @@ class TouchExt:
 
 		self.pan_speed_op = op("speed1")
 		self.map_data_op = op("map_data")
+		self.touch_op = op("mtouchin1")
+		self.SetActive(1)
 
 	def ResetPan(self):
 		self.pan_speed_op.par.reset.pulse()
@@ -14,4 +16,5 @@ class TouchExt:
 		self.map_data_op.par.value2.val = .5
 		self.map_data_op.par.value3.val = .5
 		
-		
+	def SetActive(self, active):
+		self.touch_op.par.active = active
