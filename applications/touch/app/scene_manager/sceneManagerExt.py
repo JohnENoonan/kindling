@@ -135,3 +135,15 @@ class ext:
 
 	def IsMapArea(self):
 		return self.chops['app']['subscenes']['MAP']['AREA'] * self.chops['app']['scenes']['MAP'] == 1
+
+	def IsMapTutorial(self):
+		return self.chops['app']['subscenes']['MAP']['TUTORIAL'] * self.chops['app']['scenes']['MAP'] == 1
+
+	def IsMatchingTutorial(self):
+		return self.chops['app']['subscenes']['MATCHING']['TUTORIAL'] * self.chops['app']['scenes']['MATCHING'] == 1
+
+	def IsMatchingSelection(self):
+		return self.chops['app']['subscenes']['MATCHING']['SELECTION'] * self.chops['app']['scenes']['MATCHING'] == 1
+
+	def IsMatchingMatched(self):
+		return self.chops['app']['subscenes']['MATCHING']['MATCHED'] * self.chops['app']['scenes']['MATCHING'] == 1

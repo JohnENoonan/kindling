@@ -21,5 +21,7 @@
 	"CONFIRM-ACCEPT": "match",
 	"CONFIRM-DECLINE": "pass",
 
-	"MATCHED-SCAN": "Scan here to find me in real life!"
+	"MATCHED-SCAN": "Scan here to find me in real life!",
+
+	"SKIP": "skip"
 }

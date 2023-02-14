@@ -140,3 +140,7 @@ class MatchExt:
 		lon = self.all_trees[local_id, "longitude"]
 		self.qr_op.par.Data = f'http://maps.google.com/maps?q=loc:{lat},{lon}'
 		self.qr_op.par.Make.pulse()
+
+	def SkipTutorial(self):
+		# force timer to finish
+		op("tutorial/timer1").goToCycleEnd()

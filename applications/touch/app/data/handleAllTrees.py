@@ -22,6 +22,8 @@ def onResponse(webClientDAT, statusCode, headerDict, data, id):
 	if res is not None:
 		op.data.ProcessAllTreesResponse(res)
 		op.scene_manager.TransitionToSub('app', 'MATCHING', 'TUTORIAL')
+		op.map.ext.mapExt.FoundTrees()
 	else:
 		op.log.Error(f"No trees returned from query {id}")
 		#todo deal with no trees
+		op.map.ext.mapExt.NoTreesAvailable()

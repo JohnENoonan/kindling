@@ -36,12 +36,15 @@ zoom_slider = op("/app/scene_app/MAP/zoom_slider_geo")
 
 match_confirm_geo = op("/app/scene_app/MATCHING/match_dialogue_geo/match_geo/null1")
 match_decline_geo = op("/app/scene_app/MATCHING/match_dialogue_geo/pass_geo/null1")
-
+match_skip = op("/app/scene_app/MATCHING/tutorial/skip_geo/null1")
 match_next_geo = op("/app/scene_app/MATCHING/match_bio/next_geo/null1")
+match_show_dialogue = op("/app/scene_app/MATCHING/match_dialogue_geo/show_dialogue")
 
 map_submit_geo = op("/app/scene_app/MAP/submit_geo/null1")
 map_geo = op("/app/scene_app/MAP/map_geo/null1")
 map_shader = op("/app/scene_app/MAP/map_shader")
+map_skip = op("/app/scene_app/MAP/tutorial/skip_geo/null1")
+
 # map data is a constant used to write out
 map_data = op("map_data")
 
@@ -81,13 +84,20 @@ def onEvents(renderPickDat, events, eventsPrev):
 			# submit map
 			elif event.selectedOp == map_submit_geo and event.selectEnd:
 				op.controller.SearchArea()
+		# skip map tutorial
+		elif op.scene_manager.IsMapTutorial() and event.selectedOp == map_skip and event.selectEnd:
+			op.map.ext.mapExt.SkipTutorial()
+		# skip matching tutorial
+		elif op.scene_manager.IsMatchingTutorial() and event.selectedOp == match_skip and event.selectEnd:
+			op.match.ext.matchExt.SkipTutorial()
 
 		# matching buttons
-		elif event.selectedOp == match_confirm_geo and event.selectEnd:
-			op.match.ext.matchExt.ConfirmMatch()
-		elif event.selectedOp == match_decline_geo and event.selectEnd:
-			op.match.ext.matchExt.DeclineMatch()
-			
+		if op.scene_manager.IsMatchingSelection() and match_show_dialogue[0][0]:
+			if event.selectedOp == match_confirm_geo and event.selectEnd:
+				op.match.ext.matchExt.ConfirmMatch()
+			elif event.selectedOp == match_decline_geo and event.selectEnd:
+				op.match.ext.matchExt.DeclineMatch()
+				
 		# finish looking at bio
-		elif event.selectedOp == match_next_geo and event.selectEnd:
+		elif event.selectedOp == match_next_geo and event.selectEnd and op.scene_manager.IsMatchingMatched():
 			op.controller.ViewCity()

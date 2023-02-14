@@ -76,6 +76,7 @@ class ControllerExt:
 		"""
 		# query the server
 		op.data.QueryCurrentArea()
+		op.map.ext.mapExt.StartSearchAnimation()
 
 	def Match(self, tree_id):
 		"""
