@@ -95,7 +95,7 @@ class MatchExt:
 		# handle swipe up
 		else:
 			op.log.Debug("swiped up")
-			op.controller.Match(self.all_trees[local_id, "tree_id"])
+			op.controller.Match(local_id)
 
 
 	def ConfirmMatch(self):
@@ -104,7 +104,7 @@ class MatchExt:
 		hide dialogue and go to the matched scene
 		"""
 		op.log.Verbose("Confirm match")
-		op.controller.Match(self.all_trees[me.fetch("match_local_id"), "tree_id"])
+		op.controller.Match(me.fetch("match_local_id"))
 		self.ShowMatchDialogue(0)
 
 

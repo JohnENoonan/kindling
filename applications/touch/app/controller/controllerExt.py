@@ -89,6 +89,8 @@ class ControllerExt:
 		op.scene_manager.TransitionToSub('app', 'MATCHING', 'MATCHED')
 		# update the matched page
 		op.match.ext.matchExt.UpdateMatchedBio()
+		# get the new selected trees
+		run("op.data.GetSelectedTrees()", delayMilliSeconds=4000)
 
 	def ViewCity(self):
 		"""
