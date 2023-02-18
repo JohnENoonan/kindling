@@ -111,5 +111,5 @@ func main() {
 	http.Handle("/random-tree", randomTreeHandler)
 
 	log.Println("Server is now live at localhost:8090")
-	http.ListenAndServe(":8090", nil)
+	http.ListenAndServe("127.0.0.1:8090", nil)
 }
