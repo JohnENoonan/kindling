@@ -11,8 +11,8 @@ dataRegular		12	0.5	1.0
 dataRegularAlt		16	0.5	1.0		
 dataLight		14	1.0	1.0		
 dataLightSmall		13	0.5	1.0	
-attractTitleProject		60	0.0	1.0
-attractTitleSub		40	0.0	1.0
+attractTitleProject	assets/fonts/MADEMountain/MADEMountain-Regular.otf	128	0.0	1.0
+attractTitleSub	assets/fonts/MADEMountain/MADEMountain-Regular.otf	40	0.0	1.0
 
 buttonMed	assets/fonts/montserrat/Montserrat-Medium.ttf	18	0.0	0.0
 profileName	assets/fonts/MADEMountain/MADEMountain-Regular.otf	60	2.0	1.0
