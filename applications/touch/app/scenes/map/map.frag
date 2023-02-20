@@ -2,6 +2,7 @@
 * This shader serves as the main map shader.
 */
 #extension GL_OES_standard_derivatives: enable
+#define NUM_SPECIES 132
 
 uniform vec2 uRes;
 uniform vec4 uZoomData;
@@ -56,17 +57,20 @@ vec2 mapLatLonToUV(vec2 latlon){
 
 
 vec4 drawSelected(vec2 mapUV, vec2 mapToScreen){
+	/*
+	* Draw the circles for the selected trees
+	*/
 	vec4 color = vec4(0.0);
 
 	for (int i = 0; i < numSelected; i++){
 		vec4 tree = uSelected[i];
 		vec2 treeUV = mapLatLonToUV(tree.zw);
-		float circle = sdCircle(mapToScreen * (mapUV - treeUV.yx), .01);
+		float circle = sdCircle(mapToScreen * (mapUV - treeUV.yx), .005);
 		float alpha = float(circle < 0.0);
-		color = vec4(alpha, 0.0, 0.0, alpha);
+		color += vec4(alpha, 0.0, 0.0, alpha);
 	}
 
-	return color;
+	return clamp(color, vec4(0.0), vec4(1.0));
 }
 
 
