@@ -74,7 +74,13 @@ vec4 drawSelected(vec2 mapUV, vec2 mapToScreen){
 	return clamp(color, vec4(0.0), vec4(1.0));
 }
 
+float getMapData(float channel){
+	return smoothstep(uStrokeWidth - uStrokeSoftness, uStrokeWidth + uStrokeSoftness, channel);
+}
 
+// vec4 blend(vec4 base, vec4 new){
+
+// }
 
 out vec4 fragColor;
 layout(location = 1) out vec4 uvSpace;
@@ -111,11 +117,20 @@ void main()
 	vec3 ocean = LIGHTBLUE.rgb;
 	vec4 color = vec4(ocean * (1.0 - .1 * wave(uv, .4, 40.0, .1)), 1.0); // use mapUV to move the waves as well with mouse
 	
-	// create roads
+	
 	vec4 mapTex = textureBicubic(sTD2DInputs[0], mapUV);
+	// create city land
+	float city = getMapData(mapTex.r);
+	color = mix(color, vec4(1.0, 0.0, 0.0, 1.0), step(.1, city));
+
+	// other land 
+	float otherLand = getMapData(mapTex.b);
+	color = mix(color, vec4(vec3(.51), 1.0), step(.1, otherLand));
+
+	// create roads
 	// mapTex.a = .;
-	float roads = smoothstep(uStrokeWidth - uStrokeSoftness, uStrokeWidth + uStrokeSoftness, mapTex.a);
-	color = mix(color, vec4(roads), float(roads > 0.1));
+	float roads = getMapData(mapTex.g);
+	color = mix(color, vec4(roads), step(.1, roads));
 	color.rgb *= color.a;
 
 	// draw pinned area
