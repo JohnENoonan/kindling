@@ -14,10 +14,11 @@ uniform vec4 uSelected[MAX_SELECTED];
 
 // ======= DATA ======= //
 // zooming data
-float uZoom = 1.0 / max(.001, uZoomData.x); // amount to zoom in
+float uZoom = 1.0 / max(.0001, uZoomData.x); // amount to zoom in
 float uStrokeWidth = uZoomData.y;
 float uStrokeSoftness = uZoomData.z;
 float uTime = uZoomData.w;
+float uZoomT = uConfig0.z;
 
 // mouse data
 vec2 uMousePan = uMouseData.xy; // values used to pan the map
@@ -76,6 +77,7 @@ vec4 drawSelected(vec2 mapUV, vec2 mapToScreen){
 
 
 out vec4 fragColor;
+layout(location = 1) out vec4 uvSpace;
 void main()
 {
 	// create uv and mappers from space to space
@@ -84,16 +86,21 @@ void main()
 	vec2 texCorrect = vec2(texAspect, 1.0); // maps map to scren
 	vec2 aspectSize = uRes / uTD2DInfos[0].res.zw;
 
-	vec2 mapUV = uv * aspectSize;
+	vec2 mapUV = uv;
 	
 	// get the map space of the pinned location
 	vec2 pinuv = mapLatLonToUV(uPinPos);
 	// apply translation and zoom
-	// mapUV -= uMousePan;
-	// mapUV += pinuv;
-	// mapUV *= uZoom;
+	mapUV += uMousePan;
+	mapUV -= pinuv.yx;
+	// mapUV -= vec2(uAreaRad/2);	
+	mapUV *= 1.0 - (.95 * uZoomT);
+	// mapUV += vec2(.5) * uZoomT;
+	mapUV += pinuv.yx;
+	mapUV -= uMousePan;
+	// mapUV += vec2(uAreaRad/2);	
 	// mapUV += uMousePan;
-	mapUV = (mapUV * uZoom) + (-uMousePan + vec2(.5) - vec2(uZoom/2.0) * aspectSize);
+	// mapUV = (mapUV * uZoom) + (-uMousePan + vec2(.5) - vec2(uZoom/2.0));
 	
 	
 
@@ -106,6 +113,7 @@ void main()
 	
 	// create roads
 	vec4 mapTex = textureBicubic(sTD2DInputs[0], mapUV);
+	// mapTex.a = .;
 	float roads = smoothstep(uStrokeWidth - uStrokeSoftness, uStrokeWidth + uStrokeSoftness, mapTex.a);
 	color = mix(color, vec4(roads), float(roads > 0.1));
 	color.rgb *= color.a;
@@ -122,6 +130,8 @@ void main()
 	color.rgb = selected.rgb * selected.a + color.rgb * (1.0 - selected.a);
 
 	// color = selected;
+	// color = vec4(mapUV, 0.0, 1.0);
+	uvSpace = vec4(mapUV, 0.0, 1.0);
 
 	fragColor = TDOutputSwizzle(color);
 }
