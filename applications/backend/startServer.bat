@@ -1,0 +1,1 @@
+pm2 start kindling.exe -- --data-file-path=all-trees.json --selected-file-path=selected.json --bios-file=../bio_generation/bios.json
