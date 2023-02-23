@@ -17,9 +17,12 @@ import requests
 
 switch_op = op("switch1")
 tree_edit_op = op("tree_image_edit")
+name_text_op = op("type_profileName")
 
 
 def onTableChange(dat):
+	# force update the name
+	name_text_op.cook(force=True)
 	# check if an image exists
 	has_image = "https://maps.googleapis.com/maps/api/streetview/metadata?location={},{}&key={}".format(dat[1, "latitude"], dat[1, "longitude"], op.env.Get('GOOGLE_KEY'))
 	signed_has_image = op.utils.SignUrl(has_image)
