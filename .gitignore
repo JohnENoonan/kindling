@@ -9,7 +9,12 @@ sketches
 /data/2015*
 qr/
 applications/backend/*.exe
+applications/watchdog
 
+# audio
+applications/audio/*.exe
+applications/audio/*.bat
+applications/audio/*.md
 
 **/.cache/**/*
 **/__pycache__**
