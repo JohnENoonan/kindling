@@ -11,3 +11,9 @@ This work is licensed under a
 [cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
 [cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
 [cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
+
+### Proprietary elements
+Several elements in this app are made using proprietary technology that is not covered by the above license. Any element that is not allowed to be shared has not been included in this repository. That being said, nothing that is missing is required to run the application, only for its maintenance and extra features.
+
+Additionally all original artworks/illustrations that are not genereated by code are the copyright of Zeana Llamas and are not covered by the CC license. They may freely be used in this project however no derivatives or commercial works may be made with/from them. 
+ 
