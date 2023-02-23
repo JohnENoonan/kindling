@@ -46,10 +46,10 @@ class MatchExt:
 		self.cache_op.par.replaceindex = - (self.matches_table.numRows - 1)
 		self.cache_op.par.replace.pulse()
 
-	def SwipeRight(self):
+	def SwipeRight(self, override=False):
 		# randomly decide if and when a match will happen
-		if random() <= op.env.Get("MATCH_PERCENTAGE"):
-			time_to_match = randint(int(op.env.Get("MATCH_MIN_DUR")), int(op.env.Get("MATCH_MAX_DUR")))
+		if random() <= op.env.Get("MATCH_PERCENTAGE") or override:
+			time_to_match = randint(int(op.env.Get("MATCH_MIN_DUR")), int(op.env.Get("MATCH_MAX_DUR"))) if not override else 0.1
 			op.log.Verbose(f"Matched on right swipe with {self.current_tree_op[1, 'local_id']}, applies in {time_to_match} seconds")
 			self.addToMatches(	self.current_tree_op[1, 'local_id'], 
 								0, 
