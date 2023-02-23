@@ -75,7 +75,7 @@ class ControllerExt:
 		If there are trees move on to matching
 		"""
 		# query the server
-		op.data.QueryCurrentArea()
+		run('op.data.QueryCurrentArea()', delayMilliSeconds=1000)
 		op.map.ext.mapExt.StartSearchAnimation()
 
 	def Match(self, tree_id):
