@@ -10,7 +10,9 @@ class TouchExt:
 		self.SetActive(1)
 
 	def ResetPan(self):
-		self.pan_speed_op.par.reset.pulse()
+		# reset the speed chops keeping track of the pan
+		op("speed2").par.reset.pulse()
+		op("speed3").par.reset.pulse()
 
 	def ResetPin(self):
 		self.map_data_op.par.value2.val = .5
