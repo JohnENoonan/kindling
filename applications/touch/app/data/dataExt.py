@@ -106,3 +106,9 @@ class DataExt:
 		"""
 		obj = self.assemblJson(local_id)
 		self.post_tree_client.request(self.selectedTreesUrl, "POST", header={'Content-type': 'application/json', 'Accept': 'text/plain'}, data=json.dumps(obj))
+
+	def GetTreeIdFromLocal(self, local_id):
+		if local_id is not None:
+			return self.tree_table[local_id, 'tree_id'].val
+		return ''
+		
