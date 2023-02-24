@@ -48,7 +48,8 @@ class ControllerExt:
 		op.scene_manager.TransitionTo("app", "ATTRACT")
 		endtime = datetime.now()
 		op.analytics.AddSession(self.session["user_id"].eval(), me.fetch("starttime", endtime), endtime, 
-								me.fetch("connected", 0), me.fetch("tree_id", ''))
+								me.fetch("connected", 0), op.data.GetTreeIdFromLocal(me.fetch("tree_id", None)))
+		op.touch.SetActive(1)
 
 
 	def Reset(self):
@@ -60,6 +61,9 @@ class ControllerExt:
 		app_comp = op("/app/scene_app")
 		if op.env.Get("APP_INSTANCE") == "app":
 			app_comp.allowCooking = True
+			# reset internal storage 
+			me.unstore("tree_id")
+			me.unstore("connected")
 			# reset the scene manager which will transition to the attract screen
 			op.scene_manager.Reset()
 			# trigger the blackout
@@ -83,6 +87,7 @@ class ControllerExt:
 		tree_id: the id of the tree the user matched with
 		"""
 		# The user has matched with a tree, we need to play the match animation and then move to the congrats screen
+		op.log.Debug("store tree id {} of type {}".format(tree_id, type(tree_id)))
 		me.store("tree_id", tree_id)
 		op.log.Verbose(f"Made final match with {tree_id}")
 		op.data.AddSelectedTree(tree_id)

@@ -1,6 +1,6 @@
 from random import random, randint
 
-SWIPE_UP_TIME = 1.5
+SWIPE_UP_TIME = 1.0
 
 class MatchExt:
 
@@ -15,9 +15,11 @@ class MatchExt:
 		self.match_bio_table = op("match_bio/bio_edit")
 		self.match_bio_table.clear()
 		self.match_bio_table.appendRow(['spc_latin', 'spc_common', 'name', 'bio', 'neighborhood'])
-		
+		# ops used for caching the images
 		self.cache_op = op("profile1/cache1")
 		self.cache_select_op = op("match_bio/cacheselect1")
+		# popup
+		self.no_matches_trigger = op("/app/scene_app/MATCHING/no_matches/no_matches_trigger")
 
 	def ClearMatches(self):
 		"""
@@ -49,10 +51,11 @@ class MatchExt:
 	def SwipeRight(self, override=False):
 		# randomly decide if and when a match will happen
 		if random() <= op.env.Get("MATCH_PERCENTAGE") or override:
-			time_to_match = randint(int(op.env.Get("MATCH_MIN_DUR")), int(op.env.Get("MATCH_MAX_DUR"))) if not override else 0.1
+			# create random duration of wait time for match back. If there is an override use SWIPE_UP_TIME
+			time_to_match = randint(int(op.env.Get("MATCH_MIN_DUR")), int(op.env.Get("MATCH_MAX_DUR"))) if not override else SWIPE_UP_TIME
 			op.log.Verbose(f"Matched on right swipe with {self.current_tree_op[1, 'local_id']}, applies in {time_to_match} seconds")
 			self.addToMatches(	self.current_tree_op[1, 'local_id'], 
-								0, 
+								int(override), 
 								time_to_match)
 			self.cacheTreeImage()
 
@@ -78,7 +81,7 @@ class MatchExt:
 			if the user right swiped they need to confirm the match
 			if they swiped up skip and go to next scene
 		"""
-		local_id = self.matches_table[match_id, "local_id"]
+		local_id = int(self.matches_table[match_id, "local_id"].val)
 		# store the prospective matches local id
 		me.store("match_local_id", int(local_id))
 		op.log.Debug(f"store local_id {local_id}")
@@ -96,6 +99,36 @@ class MatchExt:
 		else:
 			op.log.Debug("swiped up")
 			op.controller.Match(local_id)
+
+	def HandleNoMatches(self):
+		"""
+		If there are no more trees to show we need to either force a match or 
+		show the no match message 
+		"""
+		num_matches = self.matches_table.numRows - 1
+		current_time = self.match_timer_op["timer_seconds"].eval()
+		if num_matches > 0:
+			# try and force a match to happen
+			for i in range(1, num_matches):
+				match_time = self.matches_table[i, 'match_time']
+				# if this match hasn't been processed yet force it by making it a swipe up and happen now
+				if match_time > current_time:
+					self.matches_table[i, 'match_time'] = -1
+					self.matches_table[i, 'swipe_up'] = 1
+					return
+			# if no matches could be forced we need to start over
+			self.ShowNoMatchesPopup()
+		else:
+			# they have no possible matches, we must show the no matches dialogue and start over
+			self.ShowNoMatchesPopup()
+
+	def ShowNoMatchesPopup(self):
+		# show the no matches popup and then end this user's session
+		dur = 1000 * (self.no_matches_trigger.par.peaklen + self.no_matches_trigger.par.release * 2.0)
+		self.no_matches_trigger.par.triggerpulse.pulse()
+		run('op.controller.FinishSession()', delayMilliSeconds=dur)
+		op.touch.SetActive(0)
+
 
 
 	def ConfirmMatch(self):
