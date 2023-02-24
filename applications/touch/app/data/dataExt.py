@@ -20,6 +20,8 @@ class DataExt:
 
 		self.tree_table = op("trees_edit")
 		self.selected_table = op("selected_edit")
+		self.selected_lat_lon_op = op("selected_lat_lon")
+
 
 	def convertAPIToTable(self, data, table):
 		keys = list(data[0].keys())
@@ -105,9 +107,16 @@ class DataExt:
 		local_id: the local_id of the tree to add
 		"""
 		obj = self.assemblJson(local_id)
+		# store the selected lat lon
+		self.selected_lat_lon_op.par.value0.val = obj['latitude']
+		self.selected_lat_lon_op.par.value1.val = obj['longitude']
 		self.post_tree_client.request(self.selectedTreesUrl, "POST", header={'Content-type': 'application/json', 'Accept': 'text/plain'}, data=json.dumps(obj))
 
 	def GetTreeIdFromLocal(self, local_id):
+		"""
+		Convert a local id to the tree id
+		Return int(tree_id) or '' if the local_id is None
+		"""
 		if local_id is not None:
 			return self.tree_table[local_id, 'tree_id'].val
 		return ''

@@ -68,7 +68,7 @@ vec4 drawSelected(vec2 mapUV, vec2 mapToScreen){
 		vec2 treeUV = mapLatLonToUV(tree.zw);
 		float circle = sdCircle(mapToScreen * (mapUV - treeUV.yx), .005);
 		float alpha = float(circle < 0.0);
-		color += vec4(alpha, 0.0, 0.0, alpha);
+		color += vec4(0.0, alpha, alpha, alpha);
 	}
 
 	return clamp(color, vec4(0.0), vec4(1.0));
