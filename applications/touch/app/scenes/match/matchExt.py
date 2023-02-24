@@ -92,6 +92,7 @@ class MatchExt:
 			name = self.all_trees[local_id, "name"]
 			neighborhood = self.all_trees[local_id, "neighborhood"]
 			op("match_dialogue_geo/name").text = f"{name} from {neighborhood} "
+			op("match_dialogue_geo/cacheselect1").par.index = -match_id +1
 			# show confirm dialogue if we don't already have a match
 			if op("subscene_raw")["SELECTION"]:
 				self.ShowMatchDialogue(1)
