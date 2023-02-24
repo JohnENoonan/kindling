@@ -64,6 +64,8 @@ class ControllerExt:
 			# reset internal storage 
 			me.unstore("tree_id")
 			me.unstore("connected")
+			# reset the data
+			op.data.GetSelectedTrees()
 			# reset the scene manager which will transition to the attract screen
 			op.scene_manager.Reset()
 			# trigger the blackout
@@ -87,9 +89,7 @@ class ControllerExt:
 		tree_id: the id of the tree the user matched with
 		"""
 		# The user has matched with a tree, we need to play the match animation and then move to the congrats screen
-		op.log.Debug("store tree id {} of type {}".format(tree_id, type(tree_id)))
 		me.store("tree_id", tree_id)
-		op.log.Verbose(f"Made final match with {tree_id}")
 		op.data.AddSelectedTree(tree_id)
 		op.scene_manager.TransitionToSub('app', 'MATCHING', 'MATCHED')
 		# update the matched page
