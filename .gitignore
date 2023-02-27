@@ -7,7 +7,7 @@
 analytics/*
 sketches
 /data/2015*
-qr/
+**/qr/*.png
 applications/backend/*.exe
 applications/watchdog
 
@@ -30,6 +30,7 @@ applications/audio/*.md
 *Crash*
 
 !**/.git-keep
+!**/.gitkeep
 notes.md
 
 # Byte-compiled / optimized / DLL files
