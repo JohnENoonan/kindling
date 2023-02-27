@@ -78,9 +78,13 @@ float getMapData(float channel){
 	return smoothstep(uStrokeWidth - uStrokeSoftness, uStrokeWidth + uStrokeSoftness, channel);
 }
 
-// vec4 blend(vec4 base, vec4 new){
+vec3 blendNormal(vec3 base, vec3 blend) {
+	return blend;
+}
 
-// }
+vec3 blendNormal(vec3 base, vec3 blend, float opacity) {
+	return (blendNormal(base, blend) * opacity + base * (1.0 - opacity));
+}
 
 out vec4 fragColor;
 layout(location = 1) out vec4 uvSpace;
@@ -115,29 +119,32 @@ void main()
 
 	// make ocean
 	vec3 ocean = LIGHTBLUE.rgb;
-	vec4 color = vec4(ocean * (1.0 - .1 * wave(uv, .4, 40.0, .1)), 1.0); // use mapUV to move the waves as well with mouse
+	vec4 color = vec4(ocean * (1.0 - .1 * wave(mapUV, .4, 40.0, .1)), 1.0);
 	
 	
 	vec4 mapTex = textureBicubic(sTD2DInputs[0], mapUV);
-	// create city land
-	float city = getMapData(mapTex.r);
-	color = mix(color, vec4(1.0, 0.0, 0.0, 1.0), step(.1, city));
-
 	// other land 
 	float otherLand = getMapData(mapTex.b);
-	color = mix(color, vec4(vec3(.51), 1.0), step(.1, otherLand));
+	color.rgb = blendNormal(color.rgb, vec3(.51), step(0.0001, otherLand));
+	// create city land
+	float city = getMapData(mapTex.r);
+	color.rgb = blendNormal(color.rgb, GREEN.rgb, step(.1, city));
+	// create parks
+	float parks = texture(sTD2DInputs[1], mapUV).r;
+	color.rgb = blendNormal(color.rgb, GREEN.rgb * .5, parks);
 
 	// create roads
-	// mapTex.a = .;
-	float roads = getMapData(mapTex.g);
-	color = mix(color, vec4(roads), step(.1, roads));
-	color.rgb *= color.a;
+	float roads = getMapData(mapTex.g) * smoothstep(.1,.3, uZoomT);
+	color.rgb = blendNormal(color.rgb, BEIGE.rgb, roads);
+	// color.rgb = mix(color.rgb, BEIGE.rgb, roads);
 
 	// draw pinned area
 	float areaCircle = sdCircle(texCorrect * (mapUV - pinuv.yx), uAreaRad / MAP_MAX_DIST);
-	float circleAlpha = .7 * float(areaCircle < 0.0) * uAreaAlpha;
-	vec3 circleColor = vec3(1.0, 0.0, 1.0);
-	color.rgb = circleColor * circleAlpha + color.rgb * (1.0 - circleAlpha);
+	float circleAlpha = uAreaAlpha * float(areaCircle < 0.0) ; //float(areaCircle < 0.0)
+	circleAlpha += 1.0-smoothstep(0.0,0.001,abs(areaCircle));
+	circleAlpha = .7 * clamp(circleAlpha, 0.0, 1.0);
+	vec3 circleColor = RED.rgb;
+	color.rgb = blendNormal(color.rgb, circleColor, circleAlpha);
 
 
 	// draw selected
