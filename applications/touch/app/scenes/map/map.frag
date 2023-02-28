@@ -148,8 +148,8 @@ void main()
 
 
 	// draw selected
-	vec4 selected = drawSelected(mapUV, texCorrect);
-	color.rgb = selected.rgb * selected.a + color.rgb * (1.0 - selected.a);
+	// vec4 selected = drawSelected(mapUV, texCorrect);
+	// color.rgb = selected.rgb * selected.a + color.rgb * (1.0 - selected.a);
 
 	// color = selected;
 	// color = vec4(mapUV, 0.0, 1.0);
