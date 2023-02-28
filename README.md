@@ -2,6 +2,7 @@
 Kindling is a dating app inspired interactive experience designed to initiate relationships between New Yorkers and the city’s unique local street trees. With this new relationship we hope to foster an interest and appreciation for the often overlooked green spaces that are New York City’s street trees.
 
 ## Contributions
+Map data was gathered from and processed with [Maperitive](http://maperitive.net/)
 
 ### Images
 * Zoom In by Phoenix Dungeon from [Noun Project](https://thenounproject.com/browse/icons/term/zoom-in/) CC BY 3.0
