@@ -64,7 +64,7 @@ def onCycle(timerOp, segment, cycle):
 	return
 
 def onDone(timerOp, segment, interrupt):
-	# op.controller.FinishSession()
+	op.controller.FinishSession()
 	return
 
 def onSubrangeStart(timerOp):
