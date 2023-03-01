@@ -1,6 +1,6 @@
 from random import random, randint
 
-SWIPE_UP_TIME = 1.0
+SWIPE_UP_TIME = .33
 
 class MatchExt:
 
@@ -177,4 +177,4 @@ class MatchExt:
 
 	def SkipTutorial(self):
 		# force timer to finish
-		op("tutorial/timer1").goToCycleEnd()
+		op("tutorial/timer1").par.gotodone.pulse()

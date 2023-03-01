@@ -120,4 +120,7 @@ class DataExt:
 		if local_id is not None:
 			return self.tree_table[local_id, 'tree_id'].val
 		return ''
-		
+
+
+	def GetLocalName(self, local_id):
+		return self.tree_table[local_id, 'name'].val
