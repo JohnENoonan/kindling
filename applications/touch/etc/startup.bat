@@ -5,4 +5,5 @@
 
 rem taskkill /f /im explorer.exe /fi "memusage gt 2"
 
-echo Todo: startup the applications
+cd ../../watchdog
+npm run launch:touch
