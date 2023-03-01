@@ -30,5 +30,7 @@
 
 	"MATCHED-SCAN": "Scan here to find me in real life!",
 
-	"SKIP": "skip"
+	"SKIP": "skip",
+
+	"USER_TIMEOUT": "Hey are you still there?\nTouch the screen to continue"
 }

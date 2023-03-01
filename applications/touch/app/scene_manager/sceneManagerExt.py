@@ -147,3 +147,6 @@ class ext:
 
 	def IsMatchingMatched(self):
 		return self.chops['app']['subscenes']['MATCHING']['MATCHED'] * self.chops['app']['scenes']['MATCHING'] == 1
+
+	def IsAttract(self):
+		return self.chops['app']['scenes']['ATTRACT'] == 1
