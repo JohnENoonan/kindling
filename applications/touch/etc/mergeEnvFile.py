@@ -21,7 +21,7 @@ def main():
 		with open("../.env", 'r') as prod:
 			for line in prod.readlines():
 				if line.strip() != "":
-					name, val = line.split("=")
+					name, val = line.split("=", 1)
 					vals.append([name.strip(), val.strip()])
 				else:
 					vals.append(line)
