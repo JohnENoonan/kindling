@@ -33,7 +33,7 @@ def onTableChange(dat):
 		status = response.json()["status"]
 		image_ok = status == "OK"
 		if image_ok:
-			get_image = "https://maps.googleapis.com/maps/api/streetview?size=600x600&location={},{}&key={}".format(dat[1, "latitude"], dat[1, "longitude"], op.env.Get('GOOGLE_KEY'))
+			get_image = "https://maps.googleapis.com/maps/api/streetview?size=600x600&location={},{}&key={}&source=outdoor".format(dat[1, "latitude"], dat[1, "longitude"], op.env.Get('GOOGLE_KEY'))
 			signed_get_image = op.utils.SignUrl(get_image)
 			tree_edit_op.par.file = signed_get_image
 			switch_op.par.index = 1
