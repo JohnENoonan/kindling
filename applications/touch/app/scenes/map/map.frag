@@ -87,7 +87,6 @@ vec3 blendNormal(vec3 base, vec3 blend, float opacity) {
 }
 
 out vec4 fragColor;
-layout(location = 1) out vec4 uvSpace;
 void main()
 {
 	// create uv and mappers from space to space
@@ -153,7 +152,5 @@ void main()
 
 	// color = selected;
 	// color = vec4(mapUV, 0.0, 1.0);
-	uvSpace = vec4(mapUV, 0.0, 1.0);
-
 	fragColor = TDOutputSwizzle(color);
 }
