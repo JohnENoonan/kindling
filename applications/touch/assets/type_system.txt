@@ -23,3 +23,5 @@ profileLatinName	assets/fonts/montserrat/Montserrat-MediumItalic.ttf	22.5	0.0	0.
 matchSubHeader	assets/fonts/montserrat/Montserrat-Medium.ttf	24	0.0	0.0		
 matchLatinName	assets/fonts/montserrat/Montserrat-MediumItalic.ttf	24	0.0	0.0		
 matchBio	assets/fonts/montserrat/Montserrat-Medium.ttf	22.5	0.0	0.0		
+
+mapConnectedCopy	assets/fonts/montserrat/Montserrat-MediumItalic.ttf	30	0.0	0.0		
