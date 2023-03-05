@@ -14,7 +14,7 @@ class MatchExt:
 		self.qr_op = op("match_bio/QRMaker")
 		self.match_bio_table = op("match_bio/bio_edit")
 		self.match_bio_table.clear()
-		self.match_bio_table.appendRow(['spc_latin', 'spc_common', 'name', 'bio', 'neighborhood'])
+		self.match_bio_table.appendRow(['spc_latin', 'spc_common', 'name', 'bio', 'neighborhood', 'has_guards', 'root_problems', 'has_lights', 'has_shoes'])
 		# ops used for caching the images
 		self.cache_op = op("profile1/cache1")
 		self.cache_select_op = op("match_bio/cacheselect1")
@@ -161,7 +161,11 @@ class MatchExt:
 											self.all_trees[local_id, "spc_common"],
 											self.all_trees[local_id, "name"],
 											self.all_trees[local_id, "bio"],
-											self.all_trees[local_id, "neighborhood"]
+											self.all_trees[local_id, "neighborhood"],
+											self.all_trees[local_id, "has_guards"], 
+											self.all_trees[local_id, "root_problems"],
+											self.all_trees[local_id, "has_lights"],
+											self.all_trees[local_id, "has_shoes"]
 		])
 
 
