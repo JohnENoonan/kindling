@@ -9,6 +9,7 @@ uniform vec4 uZoomData;
 uniform vec4 uMouseData;
 uniform vec4 uArea;
 uniform vec4 uConfig0;
+uniform vec2 uPrimeProduce;
 const int MAX_SELECTED = 512;
 uniform vec4 uSelected[MAX_SELECTED];
 
@@ -55,7 +56,16 @@ vec2 mapLatLonToUV(vec2 latlon){
 	return remap(latlon, MIN_LAT_LON, MAX_LAT_LON, vec2(0.0), vec2(1.0));
 }
 
-
+float sdUnevenCapsule( vec2 p, float r1, float r2, float h )
+{
+	p.x = abs(p.x);
+	float b = (r1-r2)/h;
+	float a = sqrt(1.0-b*b);
+	float k = dot(p,vec2(-b,a));
+	if( k < 0.0 ) return length(p) - r1;
+	if( k > a*h ) return length(p-vec2(0.0,h)) - r2;
+	return dot(p, vec2(a,b) ) - r1;
+}
 
 vec4 drawSelected(vec2 mapUV, vec2 mapToScreen){
 	/*
@@ -139,11 +149,17 @@ void main()
 
 	// draw pinned area
 	float areaCircle = sdCircle(texCorrect * (mapUV - pinuv.yx), uAreaRad / MAP_MAX_DIST);
-	float circleAlpha = uAreaAlpha * float(areaCircle < 0.0) ; //float(areaCircle < 0.0)
+	float circleAlpha = float(areaCircle < 0.0) ; //float(areaCircle < 0.0)
 	circleAlpha += 1.0-smoothstep(0.0,0.001,abs(areaCircle));
-	circleAlpha = .7 * clamp(circleAlpha, 0.0, 1.0);
+	circleAlpha = uAreaAlpha * .7 * clamp(circleAlpha, 0.0, 1.0);
 	vec3 circleColor = RED.rgb;
 	color.rgb = blendNormal(color.rgb, circleColor, circleAlpha);
+
+	//draw prime produce
+	vec2 primeProduceUV = mapLatLonToUV(uPrimeProduce);
+	vec3 capsuleScale = vec3(.00001, .001, .002) * 16.0 * (1.0 - remap(uZoomT, 0.0, 1.0, 0.0, .9));
+	float capsule = sdUnevenCapsule((mapUV - primeProduceUV.yx), capsuleScale.x, capsuleScale.y, capsuleScale.z);
+	color.rgb = blendNormal(color.rgb, RED.rgb, 1.0 - smoothstep(0.0, .0001, capsule));
 
 
 	// draw selected
