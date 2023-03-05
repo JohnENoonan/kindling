@@ -157,9 +157,10 @@ void main()
 
 	//draw prime produce
 	vec2 primeProduceUV = mapLatLonToUV(uPrimeProduce);
-	vec3 capsuleScale = vec3(.00001, .001, .002) * 16.0 * (1.0 - remap(uZoomT, 0.0, 1.0, 0.0, .9));
+	vec4 capsuleScale = vec4(.00001, .001, .002, 0.00015) * 16.0 * (1.0 - remap(uZoomT, 0.0, 1.0, 0.0, .9));
 	float capsule = sdUnevenCapsule((mapUV - primeProduceUV.yx), capsuleScale.x, capsuleScale.y, capsuleScale.z);
 	color.rgb = blendNormal(color.rgb, RED.rgb, 1.0 - smoothstep(0.0, .0001, capsule));
+	color.rgb = mix( color.rgb, WHITE.rgb, 1.0-smoothstep(0.0, capsuleScale.w,abs(capsule)) );
 
 
 	// draw selected
