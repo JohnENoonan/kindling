@@ -31,6 +31,7 @@ class ControllerExt:
 		to the interactive scene
 		"""
 		op.controller.NewUser()
+		op.audio.PlayStart()
 		op.scene_manager.TransitionToSub('app', 'MAP', 'TUTORIAL')
 
 	def initializeUser(self):
@@ -50,6 +51,7 @@ class ControllerExt:
 		op.analytics.AddSession(self.session["user_id"].eval(), me.fetch("starttime", endtime), endtime, 
 								me.fetch("connected", 0), op.data.GetTreeIdFromLocal(me.fetch("tree_id", None)))
 		op.touch.SetActive(1)
+		op.audio.PlayFinish()
 
 
 	def Reset(self):
@@ -83,6 +85,7 @@ class ControllerExt:
 		# query the server
 		run('op.data.QueryCurrentArea()', delayMilliSeconds=1000)
 		op.map.ext.mapExt.StartSearchAnimation()
+		op.audio.PlayButtonClick()
 
 	def Match(self, tree_id):
 		"""
@@ -94,6 +97,7 @@ class ControllerExt:
 		op.scene_manager.TransitionToSub('app', 'MATCHING', 'MATCHED')
 		# update the matched page
 		op.match.ext.matchExt.UpdateMatchedBio()
+		op.audio.PlayMatch()
 		# get the new selected trees
 		run("op.data.GetSelectedTrees()", delayMilliSeconds=4000)
 

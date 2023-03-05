@@ -61,3 +61,15 @@ vec3 blendOverlay(vec3 base, vec3 blend) {
 vec3 blendOverlay(vec3 base, vec3 blend, float opacity) {
    return (blendOverlay(base, blend) * opacity + base * (1.0 - opacity));
 }
+
+vec3 blendNormal(vec3 base, vec3 blend) {
+   return blend;
+}
+
+vec3 blendNormal(vec3 base, vec3 blend, float opacity) {
+   return (blendNormal(base, blend) * opacity + base * (1.0 - opacity));
+}
+
+vec2 mapLatLonToUV(vec2 latlon){
+   return remap(latlon, MIN_LAT_LON, MAX_LAT_LON, vec2(0.0), vec2(1.0));
+}

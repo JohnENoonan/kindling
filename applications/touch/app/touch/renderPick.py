@@ -87,17 +87,27 @@ def onEvents(renderPickDat, events, eventsPrev):
 		# skip map tutorial
 		elif op.scene_manager.IsMapTutorial() and event.selectedOp == map_skip and event.selectEnd:
 			op.map.ext.mapExt.SkipTutorial()
+			op.audio.PlayButtonClick()
+
 		# skip matching tutorial
 		elif op.scene_manager.IsMatchingTutorial() and event.selectedOp == match_skip and event.selectEnd:
 			op.match.ext.matchExt.SkipTutorial()
+			op.audio.PlayButtonClick()
+
 
 		# matching buttons
 		if op.scene_manager.IsMatchingSelection() and match_show_dialogue[0][0]:
 			if event.selectedOp == match_confirm_geo and event.selectEnd:
 				op.match.ext.matchExt.ConfirmMatch()
+				op.audio.PlayButtonClick()
+
 			elif event.selectedOp == match_decline_geo and event.selectEnd:
 				op.match.ext.matchExt.DeclineMatch()
+				op.audio.PlayButtonClick()
+
 				
 		# finish looking at bio
 		elif event.selectedOp == match_next_geo and event.selectEnd and op.scene_manager.IsMatchingMatched():
 			op.controller.ViewCity()
+			op.audio.PlayButtonClick()
+
