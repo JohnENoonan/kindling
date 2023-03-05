@@ -11,18 +11,18 @@
 				"filepath": [
 					"button1.wav",
 					"button2.wav",
-					"button3.wav",
+					"button3.wav"
 				],
-				"gain" : 1.0
+				"gain": 1.0
 			},
 			"match": {
 				"stream": true,
 				"filepath": "match.wav",
-				"gain" : 1.0
+				"gain": 1.0
 			},
 			"end_session": {
 				"stream": true,
-				"filepath": "goodbye.wav",
+				"filepath": "goodbye.wav"
 			}
 		}
 	}
