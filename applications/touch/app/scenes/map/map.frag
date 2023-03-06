@@ -15,11 +15,10 @@ uniform vec4 uSelected[MAX_SELECTED];
 
 // ======= DATA ======= //
 // zooming data
-float uZoom = 1.0 / max(.0001, uZoomData.x); // amount to zoom in
 float uStrokeWidth = uZoomData.y;
 float uStrokeSoftness = uZoomData.z;
 float uTime = uZoomData.w;
-float uZoomT = uConfig0.z;
+float uZoomT = uZoomData.x;//uConfig0.z;
 
 // mouse data
 vec2 uMousePan = uMouseData.xy; // values used to pan the map
@@ -45,7 +44,7 @@ float texFrameRatio = texAspect / frameAspect;
 float wave(vec2 uv, float speed, float scl, float waveWidthFact) {
 	// create repeated waves. Takes uv. Tiling is controled by scl
 	float curve = 0.4 * sin(9.25 * uv.x + (uTime * speed)) ;
-	float waveWidth = waveWidthFact * clamp(uZoom, 0.0, 1.0);
+	float waveWidth = waveWidthFact * remap(uZoomT,1.0, 0.0, 0.1, 1.0);
 	float waveSoftness = waveWidth * .1;
 	float lineAShape = clamp(distance(curve + scl * mod(uv.y, 1.0/scl), 0.5) * 1.0, 0.0, 1.0);
 	return 1.0-smoothstep(waveWidth - waveSoftness, waveWidth + waveSoftness,abs(lineAShape));
@@ -111,7 +110,7 @@ void main()
 	float city = getMapData(mapTex.r);
 	color.rgb = blendNormal(color.rgb, WHITE.rgb, step(.1, city));
 	// create parks
-	float parks = texture(sTD2DInputs[1], mapUV).r;
+	float parks = getMapData(textureBicubic(sTD2DInputs[1], mapUV).r);
 	color.rgb = blendNormal(color.rgb, PARKS_COLOR.rgb, parks);
 
 	// create roads
