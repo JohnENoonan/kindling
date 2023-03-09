@@ -65,7 +65,7 @@ class ext:
 				op.log.Debug( 'Reset ' + o.path )
 
 
-		run( "op.scene_manager.FinishReset()", delayFrames=5000 )
+		run( "op.scene_manager.FinishReset()", delayMilliSeconds=5000 )
 
 
 		return
@@ -77,8 +77,11 @@ class ext:
 		"""
 		delay_len = 120
 		self.TransitionTo('app', 'ATTRACT')
+		op.log.Debug("Reset transition into attract")
 		for i, scene in enumerate(["ATTRACT"]):
 			run( "op('/app/scene_app/{}').TweenIn()".format(scene), delayFrames=delay_len * i )
+			run( "op.log.Debug('do tween in')", delayFrames=delay_len * i)
+
 
 
 

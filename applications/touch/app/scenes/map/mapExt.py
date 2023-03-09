@@ -11,7 +11,7 @@ class MapExt:
 		self.loading_trigger_op = op("search_anims/loading_trigger")
 
 	def SkipTutorial(self):
-		self.tutorial_timer_op.goToCycleEnd()
+		self.tutorial_timer_op.par.gotodone.pulse()
 
 	def ResetMap(self):
 		op.log.Verbose("Reset Map")
