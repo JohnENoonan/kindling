@@ -65,7 +65,7 @@ class ext:
 				op.log.Debug( 'Reset ' + o.path )
 
 
-		run( "op.scene_manager.FinishReset()", delayFrames=300 )
+		run( "op.scene_manager.FinishReset()", delayFrames=5000 )
 
 
 		return
