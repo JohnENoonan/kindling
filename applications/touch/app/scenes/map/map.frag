@@ -9,9 +9,7 @@ uniform vec4 uZoomData;
 uniform vec4 uMouseData;
 uniform vec4 uArea;
 uniform vec4 uConfig0;
-uniform vec2 uPrimeProduce;
-const int MAX_SELECTED = 512;
-uniform vec4 uSelected[MAX_SELECTED];
+uniform vec3 uPrimeProduce;
 
 // ======= DATA ======= //
 // zooming data
@@ -27,10 +25,12 @@ vec2 uMousePan = uMouseData.xy; // values used to pan the map
 vec2 uPinPos = uArea.xy;
 float uAreaRad = uArea.z;
 float uAreaAlpha = uArea.w; // alpha value for rendering the area circle
+float uAreaScaleAnimVal = uConfig0.w;
 
 // scene values
 bool isConnected = bool(uConfig0.x);
 int numSelected = int(uConfig0.y);
+
 
 
 // ======= CONSTANTS ======= //
@@ -127,8 +127,8 @@ void main()
 	color.rgb = blendNormal(color.rgb, circleColor, circleAlpha);
 
 	//draw prime produce
-	vec2 primeProduceUV = mapLatLonToUV(uPrimeProduce);
-	vec4 capsuleScale = vec4(.00001, .001, .002, 0.00015) * 16.0 * (1.0 - remap(uZoomT, 0.0, 1.0, 0.0, .9));
+	vec2 primeProduceUV = mapLatLonToUV(uPrimeProduce.xy);
+	vec4 capsuleScale = (1.0 + uPrimeProduce.z) * vec4(.00001, .001, .002, 0.00015) * 16.0 * (1.0 - remap(uZoomT, 0.0, 1.0, 0.0, .9));
 	float capsule = sdUnevenCapsule((mapUV - primeProduceUV.yx), capsuleScale.x, capsuleScale.y, capsuleScale.z);
 	color.rgb = blendNormal(color.rgb, RED.rgb, 1.0 - smoothstep(0.0, .0001, capsule));
 	color.rgb = mix( color.rgb, WHITE.rgb, 1.0-smoothstep(0.0, capsuleScale.w,abs(capsule)) );

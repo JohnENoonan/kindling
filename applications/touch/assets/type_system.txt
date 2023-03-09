@@ -25,4 +25,5 @@ matchLatinName	assets/fonts/montserrat/Montserrat-MediumItalic.ttf	24	0.0	0.0
 matchBio	assets/fonts/montserrat/Montserrat-Medium.ttf	22.5	0.0	0.0		
 
 mapConnectedCopy	assets/fonts/montserrat/Montserrat-MediumItalic.ttf	30	0.0	0.0		
+mapTutorial	assets/fonts/montserrat/Montserrat-Medium.ttf	30	0.0	0.0		
 mapGoodbye	assets/fonts/MADEMountain/MADEMountain-Regular.otf	50	3.0	0.0		

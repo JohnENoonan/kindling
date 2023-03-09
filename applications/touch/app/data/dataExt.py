@@ -4,6 +4,8 @@ headers = {
 	'Content-Type': 'application/x-www-form-urlencoded',
 }
 
+MAX_SELECTED = 500
+
 class DataExt:
 
 	def __init__( self, ownerComp ):
@@ -56,12 +58,16 @@ class DataExt:
 		features_keys = ['diameter', 'introverted', 'has_guards', 'root_problems', 'has_lights', 'has_shoes', 'zipcode']
 		self.selected_table.clear()
 		self.selected_table.appendRow(keys + features_keys)
-		for tree in data:
+		i = 0
+		for tree in reversed(data):
+			if i >= MAX_SELECTED:
+				break
 			# main fields
 			fields = [tree[key] for key in keys ]
 			# features
 			features = [tree["features"][key] for key in features_keys]
 			self.selected_table.appendRow(fields + features)
+			i += 1
 
 	def QueryCurrentArea(self):
 		rad = self.raduisOp[0].eval()
