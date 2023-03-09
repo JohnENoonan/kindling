@@ -24,6 +24,7 @@ class ControllerExt:
 		op.log.Info("Start new user session {0:.0f}".format(self.session["user_id"].eval()))
 		op.match.ext.matchExt.Reset()
 		op.map.ext.mapExt.ResetMap()
+		self.initializeUser()
 
 	def StartNewSession(self):
 		"""
