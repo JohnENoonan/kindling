@@ -181,4 +181,4 @@ class MatchExt:
 
 	def SkipTutorial(self):
 		# force timer to finish
-		op("tutorial/timer1").par.gotodone.pulse()
+		op("tutorial/timer1").goToCycleEnd()
