@@ -71,6 +71,7 @@ class ControllerExt:
 			op.data.GetSelectedTrees()
 			# reset the scene manager which will transition to the attract screen
 			op.scene_manager.Reset()
+			op.match.ext.matchExt.Reset()
 			# trigger the blackout
 			blackout_trigger = op("blackout_trigger")
 			blackout_trigger.par.triggerpulse.pulse()
